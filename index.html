@@ -6,645 +6,710 @@
 <title>Dashboard — Lidera tu Negocio</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0d0b18;--s1:#12102a;--s2:#1a1740;--s3:#221f52;--pu:#3c2b86;--mg:#e61978;--mg2:rgba(230,25,120,0.13);--pu2:rgba(60,43,134,0.22);--tx:#f0ecff;--tm:#8b80b8;--tf:#4e4770;--bd:rgba(255,255,255,0.07);--gn:#22d3a5;--rd:#f05a7e;--am:#f59e0b}
+
+:root{--bg:#0d0b18;--s1:#12102a;--s2:#1a1740;--s3:#221f52;--pu:#3c2b86;--mg:#e61978;--mg2:rgba(230,25,120,0.12);--pu2:rgba(60,43,134,0.22);--tx:#f0ecff;--tm:#8b80b8;--tf:#4e4770;--bd:rgba(255,255,255,0.07);--gn:#22d3a5;--rd:#f05a7e;--am:#f59e0b}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 55% 40% at 8% 3%,rgba(60,43,134,.28) 0%,transparent 65%),radial-gradient(ellipse 35% 35% at 92% 88%,rgba(230,25,120,.12) 0%,transparent 65%);pointer-events:none}
 .app{position:relative;z-index:1;display:flex;min-height:100vh}
-.sb{width:220px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:26px 0 20px;position:fixed;top:0;left:0;bottom:0;z-index:20}
-.sb-logo{padding:0 20px 22px;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.sb{width:210px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:22px 0 16px;position:fixed;top:0;left:0;bottom:0;z-index:20}
+.sb-logo{padding:0 18px 18px;border-bottom:1px solid var(--bd);margin-bottom:14px}
 .sb-brand{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--mg)}
-.sb-sub{font-size:10px;color:var(--tf);margin-top:3px}
-.nav-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--tf);padding:0 20px 7px;margin-top:6px}
-.nav-a{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:var(--tm);cursor:pointer;transition:all .15s;border-left:2px solid transparent;margin:1px 0;user-select:none}
+.sb-sub{font-size:10px;color:var(--tf);margin-top:2px}
+.nav-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--tf);padding:0 18px 6px;margin-top:4px}
+.nav-a{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:12.5px;font-weight:500;color:var(--tm);cursor:pointer;transition:all .15s;border-left:2px solid transparent;margin:1px 0;user-select:none}
 .nav-a:hover{color:var(--tx);background:var(--pu2)}
 .nav-a.on{color:var(--mg);border-left-color:var(--mg);background:var(--mg2);font-weight:600}
-.sb-bot{margin-top:auto;padding:16px 20px 0;border-top:1px solid var(--bd)}
-.sb-sel{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;width:100%;color:var(--tx);font-size:12px;font-family:inherit;outline:none;cursor:pointer}
-.sb-lbl{font-size:10px;color:var(--tf);margin-bottom:5px;text-transform:uppercase;letter-spacing:.1em}
-.main{margin-left:220px;flex:1;padding:28px 32px;min-height:100vh}
-.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--bd)}
-.ph-title{font-size:22px;font-weight:800;letter-spacing:-.02em}
-.ph-title span{color:var(--mg)}
-.ph-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.period-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:20px;background:var(--pu2);border:1px solid rgba(100,90,200,.25);font-size:11px;font-weight:700;color:#a39dff;text-transform:uppercase;letter-spacing:.1em}
-.ph-date{font-size:11px;color:var(--tf);font-family:'Courier New',monospace}
-.sync-status{font-size:10px;display:flex;align-items:center;gap:5px;color:var(--tf)}
+.main{margin-left:210px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:10;flex-shrink:0}
+.tb-left{display:flex;flex-direction:column}
+.tb-title{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.tb-title span{color:var(--mg)}
+.tb-date{font-size:10px;color:var(--tf);font-family:monospace;margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:12px}
+.year-sel{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:8px 14px;color:var(--tx);font-size:13px;font-weight:700;font-family:inherit;outline:none;cursor:pointer;letter-spacing:.04em;min-width:90px}
+.year-sel:focus{border-color:var(--mg)}
+.add-btn{display:flex;align-items:center;gap:6px;background:var(--mg);border:none;color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .18s;white-space:nowrap}
+.add-btn:hover{background:#f03c8a;transform:translateY(-1px)}
+.sync-pill{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;background:var(--s2);border:1px solid var(--bd);font-size:10px;color:var(--tm)}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--tf);flex-shrink:0}
-.sync-dot.ok{background:var(--gn)}
-.sync-dot.spin{background:var(--am);animation:pulse .8s infinite}
-.sync-dot.err{background:var(--rd)}
+.sync-dot.ok{background:var(--gn)}.sync-dot.spin{background:var(--am);animation:pulse .8s infinite}.sync-dot.err{background:var(--rd)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.content{padding:22px 28px;flex:1}
 .sec{display:none}
 .sec.on{display:block}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-bottom:18px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:17px;margin-bottom:18px}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:18px;transition:border-color .18s}
-.card:hover{border-color:rgba(230,25,120,.22)}
-.ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--tf);margin-bottom:13px}
-.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px 18px;position:relative;overflow:hidden;transition:all .18s}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:16px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:15px;margin-bottom:16px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;transition:border-color .18s}
+.card:hover{border-color:rgba(230,25,120,.2)}
+.ctitle{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--tf);margin-bottom:11px}
+.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden;transition:all .18s}
 .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--c1,#3c2b86),var(--c2,#e61978))}
-.kpi:hover{border-color:rgba(230,25,120,.22);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.35)}
-.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tf);margin-bottom:8px}
-.kv{font-size:22px;font-weight:800;letter-spacing:-.03em;font-family:'Courier New',monospace;line-height:1;margin-bottom:6px}
-.ks{font-size:11px;color:var(--tm)}
-.cw{position:relative;height:200px}
-.cwt{position:relative;height:245px}
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.kpi:hover{border-color:rgba(230,25,120,.2);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.kl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tf);margin-bottom:7px}
+.kv{font-size:21px;font-weight:800;letter-spacing:-.03em;font-family:monospace;line-height:1;margin-bottom:5px}
+.ks{font-size:10.5px;color:var(--tm)}
+.cw{position:relative;height:195px}
+.cwt{position:relative;height:235px}
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
 .tbl thead tr{border-bottom:1px solid var(--bd)}
-.tbl th{padding:7px 10px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--tf);font-weight:700;white-space:nowrap}
+.tbl th{padding:6px 9px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tf);font-weight:700;white-space:nowrap}
 .tbl tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
-.tbl tbody tr:hover{background:rgba(255,255,255,.025)}
-.tbl td{padding:8px 10px;color:var(--tm)}
+.tbl tbody tr:hover{background:rgba(255,255,255,.02)}
+.tbl td{padding:7px 9px;color:var(--tm)}
 .tbl td:first-child{color:var(--tx);font-weight:500}
-.mn{font-family:'Courier New',monospace;font-size:11.5px;font-weight:600}
-.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.mn{font-family:monospace;font-size:11px;font-weight:600}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700}
 .bdg::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor}
 .bgn{background:rgba(34,211,165,.1);color:#22d3a5}
 .brd{background:rgba(240,90,126,.1);color:#f05a7e}
 .bam{background:rgba(245,158,11,.1);color:#f59e0b}
 .bpu{background:rgba(60,43,134,.22);color:#a39dff}
-.bmg{background:rgba(230,25,120,.13);color:#ff7ec7}
+.bmg{background:rgba(230,25,120,.12);color:#ff7ec7}
 .bgr{background:rgba(255,255,255,.08);color:#8b80b8}
 .tgn{color:#22d3a5}.trd{color:#f05a7e}
-.pr{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
-.pr-h{display:flex;justify-content:space-between;font-size:11.5px}
+.pr{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.pr-h{display:flex;justify-content:space-between;font-size:11px}
 .pr-h span:first-child{color:var(--tm)}
-.pr-h span:last-child{color:var(--tx);font-weight:700;font-family:'Courier New',monospace;font-size:11px}
+.pr-h span:last-child{color:var(--tx);font-weight:700;font-family:monospace;font-size:10.5px}
 .pr-t{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
 .pr-f{height:100%;border-radius:2px}
-.fn{position:relative;padding:9px 12px;border-radius:8px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;overflow:hidden;margin-bottom:6px}
-.fn::before{content:'';position:absolute;top:0;left:0;bottom:0;background:linear-gradient(90deg,var(--fc,rgba(60,43,134,.35)),transparent);width:var(--fw,100%);z-index:0}
-.fn-l{position:relative;z-index:1;font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:7px}
-.fn-n{position:relative;z-index:1;font-family:'Courier New',monospace;font-size:15px;font-weight:800}
-.fn-p{font-size:9.5px;color:var(--tm);margin-left:3px}
-.dlbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--tf);display:flex;align-items:center;gap:8px;margin:14px 0 10px}
+.fn{position:relative;padding:8px 11px;border-radius:8px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;overflow:hidden;margin-bottom:5px}
+.fn::before{content:'';position:absolute;top:0;left:0;bottom:0;background:linear-gradient(90deg,var(--fc),transparent);width:var(--fw,100%);z-index:0}
+.fn-l{position:relative;z-index:1;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px}
+.fn-n{position:relative;z-index:1;font-family:monospace;font-size:14px;font-weight:800}
+.fn-p{font-size:9px;color:var(--tm);margin-left:3px}
+.dlbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--tf);display:flex;align-items:center;gap:8px;margin:12px 0 9px}
 .dlbl::after{content:'';flex:1;height:1px;background:var(--bd)}
-/* SEED PANEL */
-.seed-panel{position:fixed;bottom:20px;right:20px;background:var(--s1);border:1px solid var(--bd2, rgba(230,25,120,.3));border-radius:12px;padding:16px 20px;z-index:100;font-size:12px;max-width:280px}
-.seed-panel h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--mg);margin-bottom:8px}
-.seed-panel p{color:var(--tm);line-height:1.5;margin-bottom:12px;font-size:11px}
-.seed-btn{background:var(--mg);border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;width:100%;transition:all .18s}
-.seed-btn:hover{background:#f03c8a}
-.seed-btn:disabled{background:var(--s3);color:var(--tm);cursor:default}
-.seed-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--tf);font-size:16px;cursor:pointer;line-height:1}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.sec.on>*{animation:fadeUp .3s ease both}
+/* DRAWER */
+.drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199;display:none}
+.drawer-bg.open{display:block}
+.drawer{position:fixed;top:0;right:-440px;bottom:0;width:440px;background:var(--s1);border-left:1px solid var(--bd);z-index:200;transition:right .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:0}
+.drawer.open{right:0}
+.dr-head{padding:20px 24px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--s1);z-index:1}
+.dr-title{font-size:14px;font-weight:700;color:var(--tx)}
+.dr-close{background:none;border:none;color:var(--tf);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px}
+.dr-close:hover{color:var(--tx)}
+.dr-body{padding:20px 24px}
+.fg{margin-bottom:15px}
+.fl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tf);margin-bottom:6px;display:block}
+.fi{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:12.5px;font-family:inherit;outline:none;transition:border-color .15s;appearance:none}
+.fi:focus{border-color:var(--mg)}
+.fi::placeholder{color:var(--tf)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-save{background:var(--mg);border:none;color:#fff;padding:12px;border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin-top:6px;transition:all .18s}
+.btn-save:hover{background:#f03c8a}
+.btn-cancel{background:none;border:1px solid var(--bd);color:var(--tm);padding:10px;border-radius:8px;font-size:12.5px;font-family:inherit;cursor:pointer;width:100%;margin-top:8px}
+/* SEED */
+.seed-panel{position:fixed;bottom:18px;right:18px;background:var(--s1);border:1px solid rgba(230,25,120,.3);border-radius:12px;padding:16px 20px;z-index:100;max-width:270px}
+.seed-panel h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--mg);margin-bottom:7px}
+.seed-panel p{color:var(--tm);line-height:1.5;margin-bottom:11px;font-size:11px}
+.seed-btn{background:var(--mg);border:none;color:#fff;padding:9px 14px;border-radius:8px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;width:100%}
+.seed-btn:disabled{background:var(--s3);color:var(--tm)}
+.seed-close{position:absolute;top:9px;right:11px;background:none;border:none;color:var(--tf);font-size:15px;cursor:pointer}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sec.on>*{animation:fadeUp .28s ease both}
 .sec.on>*:nth-child(2){animation-delay:.05s}
 .sec.on>*:nth-child(3){animation-delay:.1s}
 .sec.on>*:nth-child(4){animation-delay:.15s}
 @media(max-width:1200px){.g4{grid-template-columns:repeat(2,1fr)}.g21{grid-template-columns:1fr}}
-@media(max-width:900px){.sb{width:60px}.sb-logo,.nav-lbl,.nav-a span,.sb-bot{display:none}.main{margin-left:60px;padding:18px}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.sb{width:56px}.sb-logo,.nav-lbl,.nav-a span{display:none}.main{margin-left:56px}.content{padding:16px}.topbar{padding:0 16px}.g3{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.g4,.g3,.g2,.g21{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
-<div class="app">
 
+<div class="app">
 <aside class="sb">
   <div class="sb-logo">
-    <div class="sb-brand">Lidera tu Negocio</div>
+    <div class="sb-brand">LTN</div>
     <div class="sb-sub">Panel de Control</div>
   </div>
   <div class="nav-lbl">Secciones</div>
-  <div class="nav-a on" onclick="lS('fin',this)"><span>💰</span><span>Financiero</span></div>
-  <div class="nav-a" onclick="lS('com',this)"><span>📈</span><span>Comercial</span></div>
+  <div class="nav-a on"  onclick="lS('res',this)"><span>📊</span><span>Resumen</span></div>
+  <div class="nav-a" onclick="lS('fac',this)"><span>💰</span><span>Facturación</span></div>
+  <div class="nav-a" onclick="lS('gas',this)"><span>💸</span><span>Gastos</span></div>
+  <div class="nav-a" onclick="lS('cit',this)"><span>📅</span><span>Citas</span></div>
+  <div class="nav-a" onclick="lS('led',this)"><span>📢</span><span>Leads</span></div>
   <div class="nav-a" onclick="lS('cli',this)"><span>🏢</span><span>Clientes</span></div>
   <div class="nav-a" onclick="lS('tar',this)"><span>✅</span><span>Tareas</span></div>
-  <div class="sb-bot">
-    <div class="sb-lbl">Año</div>
-    <select class="sb-sel" onchange="lY(this.value)">
-      <option value="2025" selected>2025</option>
-      <option value="2026">2026 (parcial)</option>
-    </select>
-  </div>
 </aside>
-
-<main class="main">
-  <div class="ph">
-    <div><div class="ph-title">Dashboard <span>LTN</span></div></div>
-    <div class="ph-right">
-      <div class="period-pill" id="pillYear">2025</div>
-      <div class="ph-date" id="todayDate"></div>
-      <div class="sync-status">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncTxt">Cargando...</span>
+<div class="main">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title">Dashboard <span>Lidera tu Negocio</span></div>
+      <div class="tb-date" id="todayDate"></div>
+    </div>
+    <div class="tb-right">
+      <select class="year-sel" id="yearSel" onchange="lY(this.value)">
+        <option value="2024">2024</option>
+        <option value="2025" selected>2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+      </select>
+      <button class="add-btn" id="addBtn" onclick="openDrawer()">+ <span id="addLabel">Nueva entrada</span></button>
+      <div class="sync-pill"><div class="sync-dot spin" id="syncDot"></div><span id="syncTxt">Cargando...</span></div>
+    </div>
+  </div>
+  <div class="content">
+    <!-- RESUMEN -->
+    <div class="sec on" id="s-res">
+      <div class="g4" id="k-res"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Ingresos vs Gastos Mensuales</div><div class="cwt"><canvas id="c-r-ig"></canvas></div></div>
+        <div class="card"><div class="ctitle">Neto Mensual</div><div class="cwt"><canvas id="c-r-nt"></canvas></div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Facturación por Cliente — Top 8</div><div class="cw"><canvas id="c-r-cl"></canvas></div></div>
+        <div class="card"><div class="ctitle">Citas por Mes (Carla / Sheila)</div><div class="cw"><canvas id="c-r-ct"></canvas></div></div>
+      </div>
+    </div>
+    <!-- FACTURACIÓN -->
+    <div class="sec" id="s-fac">
+      <div class="g4" id="k-fac"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Por Cliente — Top 10</div><div class="cwt"><canvas id="c-f-cl"></canvas></div></div>
+        <div class="card"><div class="ctitle">Evolución Mensual</div><div class="cwt"><canvas id="c-f-mo"></canvas></div></div>
+      </div>
+      <div class="card"><div class="ctitle">Detalle de Entradas</div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Mes</th><th>Cliente</th><th>Ítem / Concepto</th><th>Importe</th></tr></thead><tbody id="t-fac"></tbody></table></div>
+      </div>
+    </div>
+    <!-- GASTOS -->
+    <div class="sec" id="s-gas">
+      <div class="g4" id="k-gas"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Gastos por Mes y Categoría</div><div class="cwt"><canvas id="c-g-mo"></canvas></div></div>
+        <div class="card"><div class="ctitle">Distribución por Categoría</div><div class="cwt"><canvas id="c-g-do"></canvas></div></div>
+      </div>
+      <div class="card"><div class="ctitle">Detalle de Gastos</div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Mes</th><th>Concepto</th><th>Importe</th></tr></thead><tbody id="t-gas"></tbody></table></div>
+      </div>
+    </div>
+    <!-- CITAS -->
+    <div class="sec" id="s-cit">
+      <div class="g4" id="k-cit"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Citas por Mes — Carla vs Sheila</div><div class="cwt"><canvas id="c-c-cs"></canvas></div></div>
+        <div class="card"><div class="ctitle">Por Tipo de Reunión</div><div class="cwt"><canvas id="c-c-ti"></canvas></div></div>
+      </div>
+      <div class="card"><div class="ctitle">Detalle de Citas</div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Persona</th><th>Comentario</th></tr></thead><tbody id="t-cit"></tbody></table></div>
+      </div>
+    </div>
+    <!-- LEADS -->
+    <div class="sec" id="s-led">
+      <div class="g4" id="k-led"></div>
+      <div class="g21">
+        <div class="card"><div class="ctitle">Leads por Mes</div><div class="cwt"><canvas id="c-l-mo"></canvas></div></div>
+        <div class="card"><div class="ctitle">Fases del Pipeline</div><div id="l-fun"></div></div>
+      </div>
+      <div class="card"><div class="ctitle">Detalle de Leads</div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Fecha</th><th>Nombre</th><th>Fase</th><th>Fuente</th><th>Asignado</th><th>Valor</th></tr></thead><tbody id="t-led"></tbody></table></div>
+      </div>
+    </div>
+    <!-- CLIENTES -->
+    <div class="sec" id="s-cli">
+      <div class="g4" id="k-cli"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Cartera de Clientes</div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Cliente</th><th>Plan</th><th>Estado</th><th>Alta</th></tr></thead><tbody id="t-cli"></tbody></table></div>
+        </div>
+        <div class="card"><div class="ctitle">Por Plan</div><div class="cwt"><canvas id="c-cli-pl"></canvas></div></div>
+      </div>
+    </div>
+    <!-- TAREAS -->
+    <div class="sec" id="s-tar">
+      <div class="g4" id="k-tar"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Estado de Tareas</div><div class="cw"><canvas id="c-t-st"></canvas></div></div>
+        <div class="card"><div class="ctitle">Por Responsable</div><div id="t-resp" style="padding-top:4px"></div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Por Cliente — Top 8</div><div id="t-tcli" style="padding-top:4px"></div></div>
+        <div class="card"><div class="ctitle">Últimas Tareas (Time Tracker)</div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Tarea</th><th>Cliente</th><th>Resp.</th><th>Estado</th><th>h</th></tr></thead><tbody id="t-live"></tbody></table></div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="sec on" id="s-fin">
-    <div class="g4" id="k-fin"></div>
-    <div class="g2">
-      <div class="card"><div class="ctitle">Ingresos vs Gastos Mensuales</div><div class="cwt"><canvas id="c-ig"></canvas></div></div>
-      <div class="card"><div class="ctitle">Neto Mensual</div><div class="cwt"><canvas id="c-nt"></canvas></div></div>
-    </div>
-    <div class="g21">
-      <div class="card"><div class="ctitle">Facturación por Cliente — Top 10</div><div class="cwt"><canvas id="c-cl"></canvas></div></div>
-      <div class="card"><div class="ctitle">Desglose de Gastos</div><div id="g-des"></div></div>
-    </div>
-    <div class="card"><div class="ctitle">Resumen Mensual Completo</div>
-      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Mes</th><th>Ingresos</th><th>Sueldos</th><th>Plataformas</th><th>Ads</th><th>Otros</th><th>Total Gastos</th><th>Neto</th><th>Margen</th></tr></thead><tbody id="t-fin"></tbody></table></div>
-    </div>
-  </div>
-
-  <div class="sec" id="s-com">
-    <div class="g4" id="k-com"></div>
-    <div class="g21">
-      <div class="card"><div class="ctitle">Citas por Mes — Carla vs Sheila</div><div class="cwt"><canvas id="c-cs"></canvas></div></div>
-      <div class="card"><div class="ctitle">Fases de Leads Meta Ads</div><div id="l-fun"></div></div>
-    </div>
-    <div class="g2">
-      <div class="card"><div class="ctitle">Leads Meta Ads por Mes</div><div class="cw"><canvas id="c-ld"></canvas></div></div>
-      <div class="card"><div class="ctitle">Inversión Publicidad Mensual</div><div class="cw"><canvas id="c-ad"></canvas></div></div>
-    </div>
-    <div class="card"><div class="ctitle">Tipos de Cita por Mes — Demo / Recurrente / Otras</div><div class="cw"><canvas id="c-ct"></canvas></div></div>
-  </div>
-
-  <div class="sec" id="s-cli">
-    <div class="g4" id="k-cli"></div>
-    <div class="g2">
-      <div class="card"><div class="ctitle">Cartera Completa de Clientes</div>
-        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Cliente</th><th>Plan</th><th>Facturado</th><th>Estado</th></tr></thead><tbody id="t-cli"></tbody></table></div>
-      </div>
-      <div class="card">
-        <div class="ctitle">Citas por Cliente — Top 8</div><div id="cit-cli"></div>
-        <div class="dlbl">Altas Q4 2025</div><div id="q4-cli"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sec" id="s-tar">
-    <div class="g4" id="k-tar"></div>
-    <div class="g2">
-      <div class="card"><div class="ctitle">Estado de Tareas</div><div class="cw"><canvas id="c-tr"></canvas></div></div>
-      <div class="card"><div class="ctitle">Tareas por Responsable</div><div id="t-resp" style="padding-top:4px"></div></div>
-    </div>
-    <div class="g2">
-      <div class="card"><div class="ctitle">Tareas por Cliente — Top 8</div><div id="t-cli-tar" style="padding-top:4px"></div></div>
-      <div class="card"><div class="ctitle">Automatizaciones por Responsable</div><div id="t-auto" style="padding-top:4px"></div></div>
-    </div>
-  </div>
-</main>
+</div>
 </div>
 
-<!-- PANEL DE SEED INICIAL -->
+<!-- DATALIST para clientes -->
+<datalist id="cli-list"><option value="Aflamas">
+<option value="Avecan">
+<option value="Beatriz Zaragoza Martínez">
+<option value="Belleza Minimalista María Miró">
+<option value="Catedral Cadiz">
+<option value="Experto Dual">
+<option value="Federópticos">
+<option value="Jesus Cuberos">
+<option value="Kawi  Piscinas">
+<option value="Lidia Casanova Casado">
+<option value="Maraver">
+<option value="Mercedes Giles">
+<option value="Nacho Vert">
+<option value="Noemi  Bañon">
+<option value="Radu Ene">
+<option value="Recoambiente">
+<option value="SCI Geriatría">
+<option value="Susana Basurto">
+<option value="Tamara Hair Salon">
+<option value="Volver Aquí"></datalist>
+
+<!-- DRAWER -->
+<div class="drawer-bg" id="drawerBg" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dr-head">
+    <div class="dr-title" id="drTitle">Nueva entrada</div>
+    <button class="dr-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</div>
+
+<!-- SEED -->
 <div class="seed-panel" id="seedPanel">
   <button class="seed-close" onclick="document.getElementById('seedPanel').remove()">×</button>
-  <h4>🔥 Configuración inicial</h4>
-  <p>Primera vez que abrís el dashboard. Subí los datos a Firebase para que el dashboard se actualice automáticamente.</p>
-  <button class="seed-btn" id="seedBtn" onclick="doSeed()">Subir datos a Firebase</button>
+  <h4>🔥 Primer acceso</h4>
+  <p>Sincroniza los datos históricos del Excel con Firebase para que el dashboard funcione desde cualquier dispositivo.</p>
+  <button class="seed-btn" id="seedBtn" onclick="doSeed()">Sincronizar con Firebase</button>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   FIREBASE CONFIG
-═══════════════════════════════════════════ */
-var FB_PROJECT = 'timetracker-ltn';
-var FB_KEY     = 'AIzaSyBiMJCGP9L5x3qBTbD2EUZAyMEOS7v8uz8';
-var FB_BASE    = 'https://firestore.googleapis.com/v1/projects/' + FB_PROJECT + '/databases/(default)/documents/dashboard-ltn';
-var LS_KEY     = 'ltn-dashboard-v1';
+var FAC_DATA=[{"cliente": "Fusión ", "item": "Pago cuota 1 setup", "importe": 666.0, "mes": 3, "año": 2024}, {"cliente": "PMV", "item": "Pago cuota 1 setup", "importe": 666.0, "mes": 4, "año": 2024}, {"cliente": "Fusión ", "item": "Pago cuota 1 setup", "importe": 666.0, "mes": 5, "año": 2024}, {"cliente": "PMV", "item": "Pago cuota 2 setup", "importe": 666.0, "mes": 5, "año": 2024}, {"cliente": "Experto Dual", "item": "Pago cuota 1 setup", "importe": 699.0, "mes": 5, "año": 2024}, {"cliente": "Experto Dual", "item": "Pago cuota 2 setup", "importe": 699.0, "mes": 5, "año": 2024}, {"cliente": "Juan José Dallarés", "item": "Pago cuota 1 setup", "importe": 699.0, "mes": 5, "año": 2024}, {"cliente": "Juan José Dallarés", "item": "Pago cuota 2 setup", "importe": 699.0, "mes": 6, "año": 2024}, {"cliente": "PMV", "item": "Pago cuota 3 setup", "importe": 665.0, "mes": 6, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes ", "importe": 210.0, "mes": 6, "año": 2024}, {"cliente": "Juan José Dallarés", "item": "Pago cuota 3 setup", "importe": 699.0, "mes": 7, "año": 2024}, {"cliente": "Fusión ", "item": "Pago cuota 3 setup", "importe": 665.0, "mes": 7, "año": 2024}, {"cliente": "PMV", "item": "Pago 1 Expande", "importe": 590.0, "mes": 7, "año": 2024}, {"cliente": "Aflamas", "item": "Pago cuota 1 setup", "importe": 733.0, "mes": 7, "año": 2024}, {"cliente": "Aflamas", "item": "Pago cuota 2 setup", "importe": 733.0, "mes": 7, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 7, "año": 2024}, {"cliente": "Aflamas", "item": "Pago cuota 3 setup", "importe": 733.0, "mes": 8, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 8, "año": 2024}, {"cliente": "PMV", "item": "Pago 2 Expande", "importe": 590.0, "mes": 8, "año": 2024}, {"cliente": "Susana Basurto", "item": "Redes", "importe": 200.0, "mes": 9, "año": 2024}, {"cliente": "Susana Basurto", "item": "Setup Strategist", "importe": 997.0, "mes": 9, "año": 2024}, {"cliente": "Juan José Dallarés", "item": "Pago 1 Expande", "importe": 590.0, "mes": 9, "año": 2024}, {"cliente": "Aflamas", "item": "Pago 1 Expande", "importe": 590.0, "mes": 9, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 9, "año": 2024}, {"cliente": "Susana Basurto", "item": "Pago 1 Expande", "importe": 590.0, "mes": 10, "año": 2024}, {"cliente": "Juan José Dallarés", "item": "Pago 2 Expande", "importe": 590.0, "mes": 10, "año": 2024}, {"cliente": "Aflamas", "item": "Pago 2 Expande", "importe": 590.0, "mes": 10, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 10, "año": 2024}, {"cliente": "Fusión ", "item": "Pago 1 Expande", "importe": 590.0, "mes": 10, "año": 2024}, {"cliente": "Experto Dual", "item": "Pago 2 Expande", "importe": 590.0, "mes": 10, "año": 2024}, {"cliente": "Susana Basurto", "item": "Pago 2 Expande", "importe": 590.0, "mes": 11, "año": 2024}, {"cliente": "Experto Dual", "item": "Pago 3 Expande", "importe": 590.0, "mes": 11, "año": 2024}, {"cliente": "Aflamas", "item": "Pago 2 Expande", "importe": 590.0, "mes": 11, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 11, "año": 2024}, {"cliente": "Recoambiente", "item": "Setup Full Infinity Plan Expande", "importe": 2197.0, "mes": 11, "año": 2024}, {"cliente": "Nutricosmetica", "item": "Setup Full Infinity Plan Expande", "importe": 2197.0, "mes": 11, "año": 2024}, {"cliente": "Susana Basurto", "item": "Pago 3 Expande", "importe": 590.0, "mes": 12, "año": 2024}, {"cliente": "Experto Dual", "item": "Pago 4 Expande", "importe": 590.0, "mes": 12, "año": 2024}, {"cliente": "Aflamas", "item": "Pago 3 Expande", "importe": 590.0, "mes": 12, "año": 2024}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 12, "año": 2024}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Cuota 1 setup Infinity", "importe": 500.0, "mes": 12, "año": 2024}, {"cliente": "Susana Basurto", "item": "Pago 4 Expande", "importe": 590.0, "mes": 1, "año": 2025}, {"cliente": "Experto Dual", "item": "Pago 5 Expande", "importe": 295.0, "mes": 1, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 4 Expande", "importe": 590.0, "mes": 1, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 1, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Cuota 2 setup Infinity", "importe": 848.5, "mes": 1, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 1 Plan Expande ", "importe": 590.0, "mes": 1, "año": 2025}, {"cliente": "Aflamas", "item": "Pago iframe Google maps", "importe": 35.0, "mes": 2, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 5 Expande", "importe": 590.0, "mes": 2, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 2, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 1 Plan Expande ", "importe": 590.0, "mes": 2, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 2 Plan Expande ", "importe": 590.0, "mes": 2, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Cuota 3 setup Infinity", "importe": 848.5, "mes": 2, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 1 Plan Expande", "importe": 590.0, "mes": 3, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 1 Wazzap", "importe": 39.0, "mes": 3, "año": 2025}, {"cliente": "HolidaysForU", "item": "Setup + pago semestral pack CRM 500 + 774", "importe": 1275.0, "mes": 3, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 6 Expande", "importe": 590.0, "mes": 3, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 3, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 3 Plan Expande ", "importe": 590.0, "mes": 3, "año": 2025}, {"cliente": "Recoambiente", "item": "Mantenimiento web", "importe": 150.0, "mes": 3, "año": 2025}, {"cliente": "Avecan", "item": "Pago 1 Wazzap", "importe": 39.0, "mes": 3, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 2 Plan Expande ", "importe": 590.0, "mes": 3, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 1 Wazzap", "importe": 39.0, "mes": 3, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 3 Plan Expande ", "importe": 590.0, "mes": 4, "año": 2025}, {"cliente": "Avecan", "item": "Pago 2 Wazzap", "importe": 39.0, "mes": 4, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 2 Wazzap", "importe": 39.0, "mes": 4, "año": 2025}, {"cliente": "Maraver", "item": "Setup pago 1", "importe": 766.0, "mes": 4, "año": 2025}, {"cliente": "Maraver", "item": "Setup pago 2", "importe": 766.0, "mes": 4, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 7 Expande", "importe": 590.0, "mes": 4, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 4, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 4 Plan Expande ", "importe": 590.0, "mes": 4, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 2 Plan Expande", "importe": 590.0, "mes": 4, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 2 Wazzap", "importe": 39.0, "mes": 4, "año": 2025}, {"cliente": "Maraver", "item": "Setup pago 3", "importe": 766.0, "mes": 4, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Setup", "importe": 500.0, "mes": 4, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "CRM plan semestral", "importe": 870.0, "mes": 4, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 4 Plan Expande ", "importe": 590.0, "mes": 5, "año": 2025}, {"cliente": "Avecan", "item": "Pago 3 Wazzap", "importe": 39.0, "mes": 5, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 3 Wazzap", "importe": 39.0, "mes": 5, "año": 2025}, {"cliente": "Maraver", "item": "Pago 1 Plan Expande", "importe": 590.0, "mes": 5, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 8 Expande", "importe": 590.0, "mes": 5, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 5, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 5 Plan Expande ", "importe": 590.0, "mes": 5, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 3 Plan Expande", "importe": 590.0, "mes": 5, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 3 Wazzap", "importe": 39.0, "mes": 5, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 5 Plan Expande ", "importe": 590.0, "mes": 6, "año": 2025}, {"cliente": "Avecan", "item": "Pago 4 Wazzap", "importe": 39.0, "mes": 6, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 4 Wazzap", "importe": 39.0, "mes": 6, "año": 2025}, {"cliente": "Maraver", "item": "Pago 2 Plan Expande", "importe": 590.0, "mes": 6, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 9 Expande", "importe": 590.0, "mes": 6, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 6, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 6 Plan Expande ", "importe": 590.0, "mes": 6, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 4 Plan Expande", "importe": 590.0, "mes": 6, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 4 Wazzap", "importe": 39.0, "mes": 6, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Setup CRM + mes 1 ", "importe": 645.0, "mes": 6, "año": 2025}, {"cliente": "Federopticos", "item": "Pago cuota 1 y 2 setup", "importe": 1532.0, "mes": 7, "año": 2025}, {"cliente": "Volver Aquí", "item": "Pago uno ads", "importe": 280.0, "mes": 7, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 6 Plan Expande ", "importe": 590.0, "mes": 7, "año": 2025}, {"cliente": "Avecan", "item": "Pago 5Wazzap", "importe": 39.0, "mes": 7, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 5 Wazzap", "importe": 39.0, "mes": 7, "año": 2025}, {"cliente": "Maraver", "item": "Pago 3 Plan Expande", "importe": 590.0, "mes": 7, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 10 Expande", "importe": 590.0, "mes": 7, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 7, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 7 Plan Expande ", "importe": 590.0, "mes": 7, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 5 Plan Expande", "importe": 590.0, "mes": 7, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 5 Wazzap", "importe": 39.0, "mes": 7, "año": 2025}, {"cliente": "Federopticos", "item": "Pago cuota 3 setup", "importe": 766.0, "mes": 8, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 7 Plan Expande ", "importe": 590.0, "mes": 8, "año": 2025}, {"cliente": "Avecan", "item": "Pago 6 Wazzap", "importe": 39.0, "mes": 8, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 6 Wazzap", "importe": 39.0, "mes": 8, "año": 2025}, {"cliente": "Maraver", "item": "Pago 4 Plan Expande", "importe": 590.0, "mes": 8, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 11 Expande", "importe": 590.0, "mes": 8, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 8, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 8 Plan Expande ", "importe": 590.0, "mes": 8, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 6 Plan Expande", "importe": 590.0, "mes": 8, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 6 Wazzap", "importe": 39.0, "mes": 8, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 8 Plan Expande ", "importe": 590.0, "mes": 9, "año": 2025}, {"cliente": "Avecan", "item": "Pago 7 Wazzap", "importe": 39.0, "mes": 9, "año": 2025}, {"cliente": "Catedral Cádiz", "item": "Pago 7 Wazzap", "importe": 39.0, "mes": 9, "año": 2025}, {"cliente": "Maraver", "item": "Pago 5 Plan Expande", "importe": 590.0, "mes": 9, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 12 Expande", "importe": 590.0, "mes": 9, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 9, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 9 Plan Expande ", "importe": 590.0, "mes": 9, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 7 Plan Expande", "importe": 590.0, "mes": 9, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 7 Wazzap", "importe": 39.0, "mes": 9, "año": 2025}, {"cliente": "Radu", "item": "Pago mensualidad + 74 de setup", "importe": 303.0, "mes": 9, "año": 2025}, {"cliente": "Federopticos", "item": "Pago 1 Wazzap", "importe": 39.0, "mes": 9, "año": 2025}, {"cliente": "Federopticos", "item": "Pago cuota mensualidad 1", "importe": 590.0, "mes": 10, "año": 2025}, {"cliente": "Federopticos", "item": "Pago 2 Wazzap", "importe": 39.0, "mes": 10, "año": 2025}, {"cliente": "Avecan", "item": "Pago 8 Wazzap", "importe": 39.0, "mes": 10, "año": 2025}, {"cliente": "Academia Premium LC", "item": "Pago 1 setup Full Inifnity", "importe": 799.0, "mes": 10, "año": 2025}, {"cliente": "Academia Premium LC", "item": "Pago 1 setup Full Inifnity", "importe": 799.0, "mes": 10, "año": 2025}, {"cliente": "Maraver", "item": "Pago 6 Plan Expande", "importe": 590.0, "mes": 10, "año": 2025}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 10, "año": 2025}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 10, "año": 2025}, {"cliente": "Maraver", "item": "Pago Wazzap", "importe": 39.0, "mes": 10, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 13 Expande", "importe": 590.0, "mes": 10, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 10, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 10 Plan Expande ", "importe": 590.0, "mes": 10, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago Wazzap", "importe": 39.0, "mes": 10, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 8 Plan Expande", "importe": 590.0, "mes": 10, "año": 2025}, {"cliente": "Maria Miró Belleza Minimalista", "item": "Pago 8 Wazzap", "importe": 39.0, "mes": 10, "año": 2025}, {"cliente": "Aire Academy Radu", "item": "Pago mensualidad 1  + 71 de setup", "importe": 300.0, "mes": 10, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Pago del semestre - Pack CRM", "importe": 870.0, "mes": 10, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Pago 5 plan CRM", "importe": 145.0, "mes": 10, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago 1 setup Full Inifnity", "importe": 799.0, "mes": 10, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago 1 setup Full Inifnity", "importe": 799.0, "mes": 10, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Setup CRM", "importe": 500.0, "mes": 10, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Pago del semestre - Pack CRM", "importe": 1134.0, "mes": 10, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Usuario adicionales", "importe": 15.0, "mes": 10, "año": 2025}, {"cliente": "Noemi Bañon", "item": "Setup CRM", "importe": 500.0, "mes": 10, "año": 2025}, {"cliente": "Noemi Bañon", "item": "Pago del semestre - Pack CRM", "importe": 1134.0, "mes": 10, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago cuota mensualidad 2", "importe": 590.0, "mes": 11, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago 3 Wazzap", "importe": 39.0, "mes": 11, "año": 2025}, {"cliente": "Avecan", "item": "Pago 9 Wazzap", "importe": 36.0, "mes": 11, "año": 2025}, {"cliente": "Academia Premium LC", "item": "Pago cuota Mensualidad 1", "importe": 990.0, "mes": 11, "año": 2025}, {"cliente": "Maraver", "item": "Pago 7 Plan Expande", "importe": 590.0, "mes": 11, "año": 2025}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 11, "año": 2025}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 11, "año": 2025}, {"cliente": "Maraver", "item": "Pago 8 Wazzap", "importe": 39.0, "mes": 11, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 14 Expande", "importe": 590.0, "mes": 11, "año": 2025}, {"cliente": "Aflamas", "item": "Pago redes", "importe": 210.0, "mes": 11, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 11 Plan Expande ", "importe": 590.0, "mes": 11, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago Wazzap 5", "importe": 39.0, "mes": 11, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 7", "importe": 229.0, "mes": 11, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 8", "importe": 229.0, "mes": 11, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Pago 6 plan CRM", "importe": 145.0, "mes": 11, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Mensualidad WhatsApp", "importe": 25.0, "mes": 11, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago cuota Mensualidad 1", "importe": 630.0, "mes": 11, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Usuario adicionales", "importe": 15.0, "mes": 11, "año": 2025}, {"cliente": "Medea Peluquería y Estética SL", "item": "Setup pago 1", "importe": 799.0, "mes": 11, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago cuota Mensualidad 2", "importe": 630.0, "mes": 12, "año": 2025}, {"cliente": "Academia Premium LC", "item": "Pago cuota Mensualidad 2", "importe": 990.0, "mes": 12, "año": 2025}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Setup pago 2", "importe": 799.0, "mes": 12, "año": 2025}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Expande Mes 1", "importe": 799.0, "mes": 12, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago cuota mensualidad 4", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago 4 Wazzap", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Avecan", "item": "Pago 11 Wazzap", "importe": 36.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Pago 9 Plan Expande", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Pago 9 Wazzap", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 15 Expande", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 12 Plan Expande ", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago Wazzap 6", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 9", "importe": 229.0, "mes": 12, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Pago 7 plan CRM", "importe": 145.0, "mes": 12, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Mensualidad WhatsApp", "importe": 25.0, "mes": 12, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Usuario adicionales", "importe": 15.0, "mes": 12, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago cuota Mensualidad 2", "importe": 630.0, "mes": 12, "año": 2025}, {"cliente": "Academia Premium LC", "item": "Pago cuota Mensualidad 2", "importe": 990.0, "mes": 12, "año": 2025}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Setup pago 2", "importe": 799.0, "mes": 12, "año": 2025}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Expande Mes 1", "importe": 799.0, "mes": 12, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago cuota mensualidad 4", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Federopticos Yolanda", "item": "Pago 4 Wazzap", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Avecan", "item": "Pago 11 Wazzap", "importe": 36.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Pago 9 Plan Expande", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 12, "año": 2025}, {"cliente": "Maraver", "item": "Pago 9 Wazzap", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Aflamas", "item": "Pago 15 Expande", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago 12 Plan Expande ", "importe": 590.0, "mes": 12, "año": 2025}, {"cliente": "Recoambiente", "item": "Pago Wazzap 6", "importe": 39.0, "mes": 12, "año": 2025}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 9", "importe": 229.0, "mes": 12, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Pago 7 plan CRM", "importe": 145.0, "mes": 12, "año": 2025}, {"cliente": "Kawi Piscinas", "item": "Mensualidad WhatsApp", "importe": 25.0, "mes": 12, "año": 2025}, {"cliente": "BC CEFIBA SL", "item": "Usuario adicionales", "importe": 15.0, "mes": 12, "año": 2025}, {"cliente": "Farmacia Curiel", "item": "Pago cuota Mensualidad 3", "importe": 630.0, "mes": 1, "año": 2026}, {"cliente": "Academia Premium LC", "item": "Pago cuota Mensualidad 3", "importe": 990.0, "mes": 1, "año": 2026}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Expande Mes 2", "importe": 799.0, "mes": 1, "año": 2026}, {"cliente": "Federopticos Yolanda", "item": "Pago cuota mensualidad 5", "importe": 590.0, "mes": 1, "año": 2026}, {"cliente": "Federopticos Yolanda", "item": "Pago 5 Wazzap", "importe": 39.0, "mes": 1, "año": 2026}, {"cliente": "Avecan", "item": "Pago 12 Wazzap", "importe": 36.0, "mes": 1, "año": 2026}, {"cliente": "Maraver", "item": "Pago 10 Plan Expande", "importe": 590.0, "mes": 1, "año": 2026}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 1, "año": 2026}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 1, "año": 2026}, {"cliente": "Maraver", "item": "Pago 10 Wazzap", "importe": 39.0, "mes": 1, "año": 2026}, {"cliente": "Aflamas", "item": "Pago 16 Expande", "importe": 590.0, "mes": 1, "año": 2026}, {"cliente": "Recoambiente", "item": "Pago 13 Plan Expande ", "importe": 590.0, "mes": 1, "año": 2026}, {"cliente": "Recoambiente", "item": "Pago Wazzap 7", "importe": 39.0, "mes": 1, "año": 2026}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 10", "importe": 229.0, "mes": 1, "año": 2026}, {"cliente": "Kawi Piscinas", "item": "Pago 8 plan CRM", "importe": 145.0, "mes": 1, "año": 2026}, {"cliente": "Kawi Piscinas", "item": "Mensualidad WhatsApp", "importe": 25.0, "mes": 1, "año": 2026}, {"cliente": "BC CEFIBA SL", "item": "Usuario adicionales", "importe": 15.0, "mes": 1, "año": 2026}, {"cliente": "Farmacia Curiel", "item": "Pago cuota Mensualidad 4", "importe": 630.0, "mes": 2, "año": 2026}, {"cliente": "Academia Premium LC", "item": "Pago cuota Mensualidad 5", "importe": 990.0, "mes": 2, "año": 2026}, {"cliente": "Medea Peluquería y Estética SL", "item": "Full Infinity Expande Mes 3", "importe": 799.0, "mes": 2, "año": 2026}, {"cliente": "Federopticos Yolanda", "item": "Pago cuota mensualidad 6", "importe": 590.0, "mes": 2, "año": 2026}, {"cliente": "Federopticos Yolanda", "item": "Pago 6 Wazzap", "importe": 39.0, "mes": 2, "año": 2026}, {"cliente": "Avecan", "item": "Pago 13 Wazzap", "importe": 36.0, "mes": 2, "año": 2026}, {"cliente": "Maraver", "item": "Pago 11 Plan Expande", "importe": 590.0, "mes": 2, "año": 2026}, {"cliente": "Maraver", "item": "Valor por campaña extra", "importe": 280.0, "mes": 2, "año": 2026}, {"cliente": "Maraver", "item": "Valor por 2 usuarios adicionales", "importe": 10.0, "mes": 2, "año": 2026}, {"cliente": "Maraver", "item": "Pago 11 Wazzap", "importe": 39.0, "mes": 2, "año": 2026}, {"cliente": "Aflamas", "item": "Pago 17 Expande", "importe": 590.0, "mes": 2, "año": 2026}, {"cliente": "Recoambiente", "item": "Pago 14 Plan Expande ", "importe": 590.0, "mes": 2, "año": 2026}, {"cliente": "Recoambiente", "item": "Pago Wazzap 8", "importe": 39.0, "mes": 2, "año": 2026}, {"cliente": "Beatriz Zaragoza", "item": "Mensualidad- Pack CRM Mes 11", "importe": 229.0, "mes": 2, "año": 2026}, {"cliente": "Kawi Piscinas", "item": "Pago 9 plan CRM", "importe": 145.0, "mes": 2, "año": 2026}, {"cliente": "Kawi Piscinas", "item": "Mensualidad WhatsApp", "importe": 25.0, "mes": 2, "año": 2026}];
+var GAS_NOM=[{"concepto": "Plataformas y suscripciones", "importe": 321.98, "mes": 1, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 2147.47, "mes": 1, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 1, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 452.45, "mes": 2, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 2827.62, "mes": 2, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 2, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 688.05, "mes": 3, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 2572.87, "mes": 3, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 3, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 533.85, "mes": 4, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 3635.68, "mes": 4, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 4, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 518.74, "mes": 5, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4128.57, "mes": 5, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 5, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 0.0, "mes": 6, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4344.07, "mes": 6, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 6, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 537.68, "mes": 7, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4231.16, "mes": 7, "año": 2025}, {"concepto": "Otros", "importe": 220.68, "mes": 6, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 610.57, "mes": 8, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 3682.31, "mes": 8, "año": 2025}, {"concepto": "Otros", "importe": 0.0, "mes": 8, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 577.31, "mes": 9, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4730.42, "mes": 9, "año": 2025}, {"concepto": "Otros", "importe": 31.82, "mes": 9, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 664.49, "mes": 10, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4819.96, "mes": 10, "año": 2025}, {"concepto": "Otros", "importe": 48.34, "mes": 10, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 1069.71, "mes": 11, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 4783.52, "mes": 11, "año": 2025}, {"concepto": "Otros", "importe": 300.0, "mes": 11, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 753.03, "mes": 12, "año": 2025}, {"concepto": "Sueldos y freelancers", "importe": 5221.44, "mes": 12, "año": 2025}, {"concepto": "Otros", "importe": 394.0, "mes": 12, "año": 2025}, {"concepto": "Plataformas y suscripciones", "importe": 632.64, "mes": 1, "año": 2026}, {"concepto": "Sueldos y freelancers", "importe": 4868.44, "mes": 1, "año": 2026}, {"concepto": "Otros", "importe": 1654.48, "mes": 1, "año": 2026}, {"concepto": "Plataformas y suscripciones", "importe": 890.25, "mes": 2, "año": 2026}, {"concepto": "Sueldos y freelancers", "importe": 4771.97, "mes": 2, "año": 2026}, {"concepto": "Otros", "importe": 300.0, "mes": 2, "año": 2026}];
+var GAS_ADS=[{"concepto": "Campaña", "importe": 60.0, "mes": 3, "año": 2025}, {"concepto": "Campaña", "importe": 200.0, "mes": 3, "año": 2025}, {"concepto": "Google Ads", "importe": 188.57, "mes": 4, "año": 2025}, {"concepto": "Meta Ads", "importe": 112.72, "mes": 5, "año": 2025}, {"concepto": "Meta Ads", "importe": 499.0, "mes": 6, "año": 2025}, {"concepto": "Meta Ads", "importe": 435.51, "mes": 7, "año": 2025}, {"concepto": "Meta Ads", "importe": 647.6, "mes": 8, "año": 2025}, {"concepto": "Meta Ads", "importe": 291.89, "mes": 9, "año": 2025}, {"concepto": "Meta Ads", "importe": 439.81, "mes": 10, "año": 2025}, {"concepto": "Meta Ads", "importe": 238.97, "mes": 11, "año": 2025}, {"concepto": "Meta Ads", "importe": 0.0, "mes": 12, "año": 2025}, {"concepto": "Meta Ads", "importe": 87.46, "mes": 1, "año": 2026}, {"concepto": "Meta Ads", "importe": 180.22, "mes": 2, "año": 2026}];
+var CITAS_DATA=[{"cliente": "Aflamas", "tipo": "Otra", "fecha": "2025-07-23", "mes": 7, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Federópticos", "tipo": "Otra", "fecha": "2025-07-21", "mes": 7, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Kawi  Piscinas", "tipo": "Otra", "fecha": "2025-07-14", "mes": 7, "año": 2025, "persona": "Sheila", "comentario": "Estratégica"}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-07-11", "mes": 7, "año": 2025, "persona": "Carla", "comentario": "De relacionamiento"}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-07-10", "mes": 7, "año": 2025, "persona": "Sheila", "comentario": "Estratégica. También participó Carla"}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-07-07", "mes": 7, "año": 2025, "persona": "Matias", "comentario": "Estratégica. También participó Ele"}, {"cliente": "Jesus Cuberos", "tipo": "Otra", "fecha": "2025-06-12", "mes": 6, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-06-11", "mes": 6, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-05-23", "mes": 5, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-05-20", "mes": 5, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-05-19", "mes": 5, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Aflamas", "tipo": "Otra", "fecha": "2025-05-12", "mes": 5, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Maraver", "tipo": "Otra", "fecha": "2025-05-05", "mes": 5, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Tamara Hair Salon", "tipo": "Otra", "fecha": "2025-04-15", "mes": 4, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Maraver", "tipo": "Otra", "fecha": "2025-04-14", "mes": 4, "año": 2025, "persona": "Carla", "comentario": "Estratégica. Sheila también participó."}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-04-14", "mes": 4, "año": 2025, "persona": "Carla", "comentario": "Estratégica. Sheila también participó."}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-04-03", "mes": 4, "año": 2025, "persona": "Sheila", "comentario": "Quejas y temas varios"}, {"cliente": "Aflamas", "tipo": "Otra", "fecha": "2025-04-03", "mes": 4, "año": 2025, "persona": "Sheila", "comentario": "Y Carla. Estratégica"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-04-03", "mes": 4, "año": 2025, "persona": "Carla", "comentario": "Estratégica"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-03-24", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "De implementación y estratégica"}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-03-24", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "De implementación y estratégica"}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-03-24", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "De implementación"}, {"cliente": "Jesus Cuberos", "tipo": "Otra", "fecha": "2025-03-21", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "Estratégica."}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-03-19", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "Estratégica. Sheila también participó."}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-03-10", "mes": 3, "año": 2025, "persona": "Carla", "comentario": "Implementación. Avances chat bot."}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-02-26", "mes": 2, "año": 2025, "persona": "Sheila", "comentario": "Implementación. Avances chat bot."}, {"cliente": "Aflamas", "tipo": "Otra", "fecha": "2025-02-25", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Qué lanzaremos en marzo."}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-02-25", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Estratégica. Repaso lanzamiento nueva campaña."}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-02-25", "mes": 2, "año": 2025, "persona": "Sheila", "comentario": "Implementación. Avances chat bot."}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-02-24", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Estratégica. Ajustes de la campaña"}, {"cliente": "SCI Geriatría", "tipo": "Otra", "fecha": "2025-02-21", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Avances en relación al CRM"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-02-20", "mes": 2, "año": 2025, "persona": "Sheila", "comentario": "Carla. Repaso de las propuestas de las campañas"}, {"cliente": "Susana Basurto", "tipo": "Otra", "fecha": "2025-02-19", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Status campaña y revisión cambio de estrategia"}, {"cliente": "Avecan", "tipo": "Otra", "fecha": "2025-02-17", "mes": 2, "año": 2025, "persona": "Sheila", "comentario": "Reunión estratégica de implementación - uso de la plataforma"}, {"cliente": "Aflamas", "tipo": "Otra", "fecha": "2025-02-14", "mes": 2, "año": 2025, "persona": "Matias", "comentario": "Reunión uso de la plataforma"}, {"cliente": "Belleza Minimalista María Miró", "tipo": "Otra", "fecha": "2025-02-10", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Repaso uso de la plataforma, automatizacione y pipelines y funnel 1"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-02-07", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Ajustes y repaso landing Funnel 1 + análisis campaña ads"}, {"cliente": "Recoambiente", "tipo": "Otra", "fecha": "2025-02-04", "mes": 2, "año": 2025, "persona": "Carla", "comentario": "Repaso sobre problemas son su web y correos"}, {"cliente": "Catedral Cadiz", "tipo": "Otra", "fecha": "2025-01-30", "mes": 1, "año": 2025, "persona": "Sheila", "comentario": "Ajustes y repaso landing Funnel 1"}, {"cliente": "Experto Dual", "tipo": "Otra", "fecha": "2025-01-03", "mes": 1, "año": 2025, "persona": "Carla", "comentario": "Sheila, Paola. Repaso campaña y cierre."}, {"cliente": "Mauro Espitia", "tipo": "Demo", "fecha": "2025-08-13", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Carlos Gómez", "tipo": "Otra", "fecha": "2025-08-12", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Octavio Molano", "tipo": "Otra", "fecha": "2025-08-13", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Nacho Maugeri", "tipo": "Otra", "fecha": "2025-08-14", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Angel Torres", "tipo": "Otra", "fecha": "2025-08-11", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Oscar Soto", "tipo": "Otra", "fecha": "2025-08-13", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Christian López", "tipo": "Otra", "fecha": "2025-08-14", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Pedro Alcazar Alcazar", "tipo": "Otra", "fecha": "2025-08-20", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Nacho Maugeri", "tipo": "Otra", "fecha": "2025-08-19", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Raquel Moreno", "tipo": "Otra", "fecha": "2025-08-19", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Jesus Cuberos", "tipo": "Recurrente", "fecha": "2025-08-21", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Irene Macias", "tipo": "Demo", "fecha": "2025-08-21", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Radu Ene", "tipo": "Otra", "fecha": "2025-08-22", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Octavio Molano", "tipo": "Otra", "fecha": "2025-08-22", "mes": 8, "año": 2025, "persona": "Sheila", "comentario": "comentario"}, {"cliente": "Radu Ene", "tipo": "Otra", "fecha": "2025-08-22", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Angel Torres", "tipo": "Demo", "fecha": "2025-08-25", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Octavio Molano", "tipo": "Demo", "fecha": "2025-08-26", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Eduardo Velez", "tipo": "Demo", "fecha": "2025-08-28", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Octavio Molano Anta", "tipo": "Otra", "fecha": "2025-09-01", "mes": 9, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Nacho Maugeri", "tipo": "Demo", "fecha": "2025-08-29", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Bianca Gratiela Lazar", "tipo": "Demo", "fecha": "2025-08-29", "mes": 8, "año": 2025, "persona": "Carla", "comentario": "comentario"}, {"cliente": "Lina Castañeda", "tipo": "Demo", "fecha": "2025-08-29", "mes": 8, "año": 2025, "persona": "", "comentario": "comentario"}, {"cliente": "Maria Ferreira", "tipo": "Demo", "fecha": "2025-09-02", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Bianca Gratiela Lazar", "tipo": "Demo", "fecha": "2025-09-01", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Raimundo No Tengo Apellido", "tipo": "Demo", "fecha": "2025-09-09", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Alfonso Imbernón", "tipo": "Otra", "fecha": "2025-09-08", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-08", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-10", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Fernando Hinojosa", "tipo": "Demo", "fecha": "2025-09-09", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-08", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-08", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Isa Lopez", "tipo": "Otra", "fecha": "2025-09-11", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Maria Luna", "tipo": "Recurrente", "fecha": "2025-09-15", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Manuel Maraver Rodríguez", "tipo": "Recurrente", "fecha": "2025-09-16", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Mauro Espitia", "tipo": "Otra", "fecha": "2025-09-15", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Jose Antonio Perez Lopez", "tipo": "Otra", "fecha": "2025-09-17", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Ana Castro Jimenez", "tipo": "Otra", "fecha": "2025-09-19", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Juan Infrala", "tipo": "Otra", "fecha": "2025-09-19", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Gema NB", "tipo": "Otra", "fecha": "2025-09-22", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Daniel Lopez Perez", "tipo": "Otra", "fecha": "2025-09-23", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Emiliya Petrova", "tipo": "Otra", "fecha": "2025-09-22", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Jorge Martin Barrera", "tipo": "Otra", "fecha": "2025-09-23", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Maria Sanchez", "tipo": "Demo", "fecha": "2025-09-30", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "NACHO VERT", "tipo": "Otra", "fecha": "2025-09-23", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Emiliya Petrova", "tipo": "Otra", "fecha": "2025-09-29", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Luis Ganzo", "tipo": "Otra", "fecha": "2025-09-26", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Iñaki Huerga", "tipo": "Otra", "fecha": "2025-09-30", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Luis Ganzo", "tipo": "Otra", "fecha": "2025-09-29", "mes": 9, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-26", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-09-26", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Laura Llabres", "tipo": "Otra", "fecha": "2025-09-29", "mes": 9, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Nacho Vert", "tipo": "Otra", "fecha": "2025-10-07", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Emiliya Petrova", "tipo": "Otra", "fecha": "2025-10-02", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Efrain Glinsky", "tipo": "Recurrente", "fecha": "2025-10-03", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Richard Bello", "tipo": "Otra", "fecha": "2025-10-02", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Jeus Perez", "tipo": "Demo", "fecha": "2025-10-06", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Radu Ene Raducan", "tipo": "Recurrente", "fecha": "2025-10-07", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Casanova", "tipo": "Recurrente", "fecha": "2025-10-15", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Carla Vallejos", "tipo": "Otra", "fecha": "2025-10-13", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-10-09", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Elena Gaska", "tipo": "Otra", "fecha": "2025-10-16", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-10-09", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Casanova", "tipo": "Otra", "fecha": "2025-10-08", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Otra", "fecha": "2025-10-14", "mes": 10, "año": 2025, "persona": "Lead", "comentario": ""}, {"cliente": "Beatriz Zaragoza Martínez", "tipo": "Recurrente", "fecha": "2025-10-16", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Alejandro Agustina", "tipo": "Otra", "fecha": "2025-10-14", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Francisca Serrano", "tipo": "Otra", "fecha": "2025-10-15", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Alejandro Agustina", "tipo": "Otra", "fecha": "2025-10-16", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Beatriz Martinez Zaragoza", "tipo": "Otra", "fecha": "2025-10-15", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Luis Miguel Ávila", "tipo": "Otra", "fecha": "2025-10-20", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Manu  Guerrero", "tipo": "Otra", "fecha": "2025-10-22", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Maribel Curiel Sosa", "tipo": "Recurrente", "fecha": "2025-10-22", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Richard Peña", "tipo": "Otra", "fecha": "2025-10-20", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "KAREN GONZALEZ", "tipo": "Recurrente", "fecha": "2025-10-27", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Nacho Vert", "tipo": "Recurrente", "fecha": "2025-10-27", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Javier Martinez", "tipo": "Otra", "fecha": "2025-10-28", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Viorica Baltag", "tipo": "Otra", "fecha": "2025-10-28", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Rafael Ramos", "tipo": "Otra", "fecha": "2025-10-29", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Valentin Tobio", "tipo": "Otra", "fecha": "2025-10-28", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Francisca Serrano", "tipo": "Otra", "fecha": "2025-10-27", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Manu  Guerrero", "tipo": "Otra", "fecha": "2025-10-29", "mes": 10, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Milagros Herrera", "tipo": "Otra", "fecha": "2025-10-29", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Maria Luna", "tipo": "Recurrente", "fecha": "2025-10-27", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Sonia Peña", "tipo": "Demo", "fecha": "2025-11-05", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Radu Ene Raducan", "tipo": "Recurrente", "fecha": "2025-10-30", "mes": 10, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Javier Martinez", "tipo": "Otra", "fecha": "2025-11-03", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "KAREN GONZALEZ", "tipo": "Recurrente", "fecha": "2025-11-05", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "KAREN GONZALEZ", "tipo": "Recurrente", "fecha": "2025-11-05", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Noemí Bañón Sánchez", "tipo": "Recurrente", "fecha": "2025-11-03", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Manu Guerrero", "tipo": "Otra", "fecha": "2025-11-06", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Yolanda García García", "tipo": "Recurrente", "fecha": "2025-11-04", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Manu Guerrero", "tipo": "Otra", "fecha": "2025-11-13", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Noemí Bañón", "tipo": "Recurrente", "fecha": "2025-11-05", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Richard Bello", "tipo": "Recurrente", "fecha": "2025-11-11", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Khadidja Belaidouni Soussi", "tipo": "Otra", "fecha": "2025-11-10", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Rosa Menéndez", "tipo": "Demo", "fecha": "2025-11-12", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Richard Bello", "tipo": "Recurrente", "fecha": "2025-11-10", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Enric Serra", "tipo": "Otra", "fecha": "2025-11-12", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Nacho Vert", "tipo": "Recurrente", "fecha": "2025-11-12", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Demo", "fecha": "2025-11-17", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Enric Serra", "tipo": "Otra", "fecha": "2025-11-20", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Juliana Puentes", "tipo": "Otra", "fecha": "2025-11-13", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Noemí Bañón Sánchez Bañón", "tipo": "Recurrente", "fecha": "2025-11-14", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Lola Perez Arocha", "tipo": "Otra", "fecha": "2025-11-17", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Ramiro Gil", "tipo": "Otra", "fecha": "2025-11-24", "mes": 11, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Lidia Casanova", "tipo": "Recurrente", "fecha": "2025-11-21", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Nacho Vert", "tipo": "Recurrente", "fecha": "2025-11-25", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Rosa Menéndez De Antón", "tipo": "Recurrente", "fecha": "2025-11-27", "mes": 11, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Jorge Sanuy", "tipo": "Demo", "fecha": "2025-12-01", "mes": 12, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Ramiro Gil", "tipo": "Otra", "fecha": "2025-12-04", "mes": 12, "año": 2025, "persona": "Sheila", "comentario": ""}, {"cliente": "Maribel Curiel", "tipo": "Recurrente", "fecha": "2025-12-04", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Eduarda Test", "tipo": "Otra", "fecha": "2025-12-05", "mes": 12, "año": 2025, "persona": "Matias", "comentario": ""}, {"cliente": "NATALIA LOBERA", "tipo": "Otra", "fecha": "2025-12-05", "mes": 12, "año": 2025, "persona": "Matias", "comentario": ""}, {"cliente": "LIDIA CASANOVA", "tipo": "Recurrente", "fecha": "2025-12-11", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Natalia Cefiba", "tipo": "Recurrente", "fecha": "2025-12-15", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Recurrente", "fecha": "2025-12-15", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Recurrente", "fecha": "2025-12-16", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "KAREN GONZALEZ", "tipo": "Recurrente", "fecha": "2025-12-16", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Rosa Menéndez", "tipo": "Recurrente", "fecha": "2025-12-16", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Julio Migliore", "tipo": "Demo", "fecha": "2026-01-07", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Casanova", "tipo": "Recurrente", "fecha": "2025-12-22", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Cadanova", "tipo": "Otra", "fecha": "2025-12-22", "mes": 12, "año": 2025, "persona": "Juliana ", "comentario": ""}, {"cliente": "Yolanda Garcia Garcia", "tipo": "Recurrente", "fecha": "2025-12-25", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Yolanda García García", "tipo": "Recurrente", "fecha": "2025-12-26", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Yolanda Garcia Garcia", "tipo": "Recurrente", "fecha": "2025-12-26", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Eugenia Valdez", "tipo": "Recurrente", "fecha": "2025-12-25", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Eugenia Valdez", "tipo": "Recurrente", "fecha": "2025-12-29", "mes": 12, "año": 2025, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Cadanova", "tipo": "Recurrente", "fecha": "2026-01-07", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Julio Migliore", "tipo": "Demo", "fecha": "2026-01-14", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Lidia Cadanova", "tipo": "Recurrente", "fecha": "2026-01-14", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Manuel MARAVER", "tipo": "Recurrente", "fecha": "2026-01-16", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Yolanda García García", "tipo": "Recurrente", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Elizabeth Alvarado", "tipo": "Demo", "fecha": "2026-01-29", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Demo", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Recurrente", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Demo", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Eduarda Oviedo", "tipo": "Demo", "fecha": "2026-01-29", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Marina Candiotto", "tipo": "Recurrente", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "LAURA PARADA", "tipo": "Otra", "fecha": "2026-01-30", "mes": 1, "año": 2026, "persona": "Matias", "comentario": ""}, {"cliente": "Nalyny  Andrea  Vanegas Cuero", "tipo": "Recurrente", "fecha": "2026-02-04", "mes": 2, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "DANIEL FERNANDEZ", "tipo": "Otra", "fecha": "2026-02-20", "mes": 2, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Sheila MINERO", "tipo": "Otra", "fecha": "2026-02-18", "mes": 2, "año": 2026, "persona": "Sheila", "comentario": ""}, {"cliente": "Matias Vallejos", "tipo": "Recurrente", "fecha": "2026-02-16", "mes": 2, "año": 2026, "persona": "Sheila", "comentario": ""}, {"cliente": "Andrea Castillo", "tipo": "Recurrente", "fecha": "2026-02-23", "mes": 2, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Bea Zaragoza Martínez", "tipo": "Recurrente", "fecha": "2026-02-26", "mes": 2, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Carla Vallejos", "tipo": "Compartida", "fecha": "2026-03-05", "mes": 3, "año": 2026, "persona": "Sheila", "comentario": ""}, {"cliente": "Elena Gaska", "tipo": "Compartida", "fecha": "2026-03-04", "mes": 3, "año": 2026, "persona": "Sheila", "comentario": ""}, {"cliente": "Elena Gaska", "tipo": "Compartida", "fecha": "2026-03-05", "mes": 3, "año": 2026, "persona": "Sheila", "comentario": ""}, {"cliente": "Maribel Curiel", "tipo": "Demo", "fecha": "2026-03-02", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Rosa Menéndez", "tipo": "Recurrente", "fecha": "2026-03-03", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Albano Siri", "tipo": "Recurrente", "fecha": "2026-03-12", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Julio Migliore", "tipo": "Recurrente", "fecha": "2026-03-16", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Rosa Menéndez", "tipo": "Recurrente", "fecha": "2026-03-18", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Julio Migliore", "tipo": "Recurrente", "fecha": "2026-03-19", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Griselda Izaguirre CSrdinaux", "tipo": "Recurrente", "fecha": "2026-03-20", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Julio Migliore", "tipo": "Recurrente", "fecha": "2026-03-26", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Yolanda García García", "tipo": "Recurrente", "fecha": "2026-03-23", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Yolanda García García", "tipo": "Recurrente", "fecha": "2026-03-30", "mes": 3, "año": 2026, "persona": "Carla", "comentario": ""}, {"cliente": "Maribel Curiel", "tipo": "Otra", "fecha": "2026-03-30", "mes": 3, "año": 2026, "persona": "Sheila", "comentario": ""}];
+var LEADS_DATA=[{"nombre": "Eduardo Velez", "fase": "Agendó Demo", "valor": 0.0, "fuente": "Facebook", "asignado": "Carla Vallejos", "fecha": "2025-08-28", "mes": 8, "año": 2025}, {"nombre": "Maria Ferreira", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-24", "mes": 8, "año": 2025}, {"nombre": "Bianca Gratiela Lazar", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-12", "mes": 8, "año": 2025}, {"nombre": "Christian LÃ³pez", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-10", "mes": 8, "año": 2025}, {"nombre": "Raimundo No tengo apellido", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-07", "mes": 8, "año": 2025}, {"nombre": "Angel Torres", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-07-07", "mes": 7, "año": 2025}, {"nombre": "Mauro Espitia", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-06-29", "mes": 6, "año": 2025}, {"nombre": "Ramiro Reinoso", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-06-04", "mes": 6, "año": 2025}, {"nombre": "Juan Carlos Moreiras", "fase": "Agendó Demo", "valor": 675.0, "fuente": "Facebook", "asignado": "Sheila Aguilar LTN", "fecha": "2025-05-27", "mes": 5, "año": 2025}, {"nombre": "Isabel LÃ³pez", "fase": "Agendó Demo", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-05", "mes": 9, "año": 2025}, {"nombre": "Dani Lopez Perez", "fase": "Bienvenida", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-08", "mes": 9, "año": 2025}, {"nombre": "Jorge Martin Barrera", "fase": "Bienvenida", "valor": 0.0, "fuente": "Facebook", "asignado": "Carla Vallejos", "fecha": "2025-08-28", "mes": 8, "año": 2025}, {"nombre": "Pedro Level up", "fase": "Bienvenida", "valor": 0.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-28", "mes": 8, "año": 2025}, {"nombre": "Pedro Alcazar Alcazar", "fase": "Cliente perdido ", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-14", "mes": 8, "año": 2025}, {"nombre": "Alfonso ImbernÃ³n", "fase": "Mensaje de audio", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-02", "mes": 9, "año": 2025}, {"nombre": "Sergio", "fase": "Mensaje de audio", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-01", "mes": 9, "año": 2025}, {"nombre": "Diego A. Escobar", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-29", "mes": 8, "año": 2025}, {"nombre": "Gema", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-23", "mes": 8, "año": 2025}, {"nombre": "Francisca Serrano | Trading Ã‰tico", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-22", "mes": 8, "año": 2025}, {"nombre": "Curro Millan", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-19", "mes": 8, "año": 2025}, {"nombre": "Javier de la PeÃ±a", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-15", "mes": 8, "año": 2025}, {"nombre": "Javier Martinez", "fase": "Mensaje de audio", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-08-08", "mes": 8, "año": 2025}, {"nombre": "SebastiÃ¡n Fernandez Lopez", "fase": "Recibió llamada telefónica", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-07-18", "mes": 7, "año": 2025}, {"nombre": "Sonia", "fase": "Recibió llamada telefónica", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-07-08", "mes": 7, "año": 2025}, {"nombre": "ALVARO DEIRA", "fase": "Recibió llamada telefónica", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-07-03", "mes": 7, "año": 2025}, {"nombre": "Fernando Hinojosa", "fase": "Recibió presupuesto", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-03", "mes": 9, "año": 2025}, {"nombre": "Lina CastaÃ±eda", "fase": "Recibió presupuesto", "valor": 729.0, "fuente": "Carla | Demo - Lidera tu Negocio", "asignado": "Carla Vallejos", "fecha": "2025-08-28", "mes": 8, "año": 2025}, {"nombre": "Fatima Azahara Makdoum Flores", "fase": "Recibió presupuesto", "valor": 675.0, "fuente": "Facebook", "asignado": "Carla Vallejos", "fecha": "2025-08-28", "mes": 8, "año": 2025}, {"nombre": "Carlos GÃ³mez", "fase": "Recibió presupuesto", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-06-28", "mes": 6, "año": 2025}, {"nombre": "Octavio Molano Anta", "fase": "Recibió presupuesto", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-06-23", "mes": 6, "año": 2025}, {"nombre": "Nacho Maugeri", "fase": "Recibió presupuesto", "valor": 675.0, "fuente": "Facebook", "asignado": "Sheila Aguilar LTN", "fecha": "2025-06-23", "mes": 6, "año": 2025}, {"nombre": "maria de los angeles bermudez", "fase": "Recibió presupuesto", "valor": 675.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-06-01", "mes": 6, "año": 2025}, {"nombre": "Inma Vives", "fase": "Video de reseña", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-04", "mes": 9, "año": 2025}, {"nombre": "Juan", "fase": "Video de reseña", "valor": 729.0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-05", "mes": 9, "año": 2025}, {"nombre": "Raymond", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-16", "mes": 9, "año": 2025}, {"nombre": "Te Ayudamos A Cancelar Tus Deudas I Recl", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-16", "mes": 9, "año": 2025}, {"nombre": "Ana López", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-17", "mes": 9, "año": 2025}, {"nombre": "Iñaki Huerga", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-18", "mes": 9, "año": 2025}, {"nombre": "Laura Llabres", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-20", "mes": 9, "año": 2025}, {"nombre": "Juliana Bereta", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-22", "mes": 9, "año": 2025}, {"nombre": "Maria", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-23", "mes": 9, "año": 2025}, {"nombre": "Sergio Pando", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-23", "mes": 9, "año": 2025}, {"nombre": "Jose Vte Beltran", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-25", "mes": 9, "año": 2025}, {"nombre": "Concepcion Linares Martos", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-26", "mes": 9, "año": 2025}, {"nombre": "Marilo Peris", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-28", "mes": 9, "año": 2025}, {"nombre": "Carlos", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-29", "mes": 9, "año": 2025}, {"nombre": "Raimon Cervera", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-09-29", "mes": 9, "año": 2025}, {"nombre": "Lola", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Lola", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Richard David  Peña Vasquez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Richard David  Peña Vasquez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Manu  Guerrero", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Manu  Guerrero", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Xavi  Gasset", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Xavi  Gasset", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Alejandro  Agustina", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Alejandro  Agustina", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Luis Miguel Ávila", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Luis Miguel Ávila", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Jorge  Roldan", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Jorge  Roldan", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-10", "mes": 10, "año": 2025}, {"nombre": "Jose Manuel Martin", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-13", "mes": 10, "año": 2025}, {"nombre": "Jose Manuel Martin", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-13", "mes": 10, "año": 2025}, {"nombre": "Javier LopezNavarro", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-15", "mes": 10, "año": 2025}, {"nombre": "Javier LopezNavarro", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-15", "mes": 10, "año": 2025}, {"nombre": "Enric Serra", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-16", "mes": 10, "año": 2025}, {"nombre": "Enric Serra", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-16", "mes": 10, "año": 2025}, {"nombre": "Rafael Ramos Gamez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-19", "mes": 10, "año": 2025}, {"nombre": "Rafael Ramos Gamez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-19", "mes": 10, "año": 2025}, {"nombre": "Valentin Tobio Martinez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-19", "mes": 10, "año": 2025}, {"nombre": "Valentin Tobio Martinez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-19", "mes": 10, "año": 2025}, {"nombre": "Josué Rodriguez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Josué Rodriguez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Milagros Herrera", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Milagros Herrera", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Sergi Prieto", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Sergi Prieto", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-20", "mes": 10, "año": 2025}, {"nombre": "Baltag Vio", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-21", "mes": 10, "año": 2025}, {"nombre": "Baltag Vio", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-21", "mes": 10, "año": 2025}, {"nombre": "Jonnathan Suarez Rivera", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-21", "mes": 10, "año": 2025}, {"nombre": "Jonnathan Suarez Rivera", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-21", "mes": 10, "año": 2025}, {"nombre": "Elena Buendía Alonso", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-23", "mes": 10, "año": 2025}, {"nombre": "Elena Buendía Alonso", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-23", "mes": 10, "año": 2025}, {"nombre": "Miriam Garelli", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-24", "mes": 10, "año": 2025}, {"nombre": "Miriam Garelli", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-24", "mes": 10, "año": 2025}, {"nombre": "Jose Antonio Carrion Rodriguez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-25", "mes": 10, "año": 2025}, {"nombre": "Jose Antonio Carrion Rodriguez", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-25", "mes": 10, "año": 2025}, {"nombre": "Diego Ibañez Martin", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-27", "mes": 10, "año": 2025}, {"nombre": "Diego Ibañez Martin", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-27", "mes": 10, "año": 2025}, {"nombre": "Siner Gia", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-28", "mes": 10, "año": 2025}, {"nombre": "Siner Gia", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-28", "mes": 10, "año": 2025}, {"nombre": "Patty", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-30", "mes": 10, "año": 2025}, {"nombre": "Patty", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-30", "mes": 10, "año": 2025}, {"nombre": "Centresantpau. Masajes, Fisioterapia Y T", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-30", "mes": 10, "año": 2025}, {"nombre": "Centresantpau. Masajes, Fisioterapia Y T", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-30", "mes": 10, "año": 2025}, {"nombre": "Rosa", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-31", "mes": 10, "año": 2025}, {"nombre": "Rosa", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-10-31", "mes": 10, "año": 2025}, {"nombre": "Amol Álvarez Villar", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-11-01", "mes": 11, "año": 2025}, {"nombre": "Amol Álvarez Villar", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-11-01", "mes": 11, "año": 2025}, {"nombre": "Marcos Carreira", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-11-12", "mes": 11, "año": 2025}, {"nombre": "Ramiro Gill", "fase": "Bienvenida", "valor": 0, "fuente": "Facebook", "asignado": "", "fecha": "2025-11-17", "mes": 11, "año": 2025}];
+var CLI_DATA=[{"nombre": "Aflamas", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Avecan", "plan": "CRM LTN", "fecha_inicio": ""}, {"nombre": "Catedral Cadiz", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Experto Dual", "plan": "Inactivo", "fecha_inicio": ""}, {"nombre": "Federópticos", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Jesus Cuberos", "plan": "CRM LTN", "fecha_inicio": ""}, {"nombre": "Kawi  Piscinas", "plan": "CRM LTN", "fecha_inicio": ""}, {"nombre": "Maraver", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Belleza Minimalista María Miró", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Recoambiente", "plan": "Infinity Expande", "fecha_inicio": ""}, {"nombre": "Susana Basurto", "plan": "Inactivo", "fecha_inicio": ""}, {"nombre": "Volver Aquí", "plan": "CRM gratuito", "fecha_inicio": ""}, {"nombre": "Beatriz Zaragoza Martínez", "plan": "CRM LTN", "fecha_inicio": ""}, {"nombre": "Mercedes Giles", "plan": "CRM gratuito", "fecha_inicio": ""}, {"nombre": "SCI Geriatría", "plan": "Inactivo", "fecha_inicio": ""}, {"nombre": "Tamara Hair Salon", "plan": "Inactivo", "fecha_inicio": ""}, {"nombre": "Radu Ene", "plan": "CRM LTN", "fecha_inicio": "2025-09-29"}, {"nombre": "Lidia Casanova Casado", "plan": "Infinity Expande", "fecha_inicio": "2025-10-01"}, {"nombre": "Nacho Vert", "plan": "CRM LTN", "fecha_inicio": "2025-10-15"}, {"nombre": "Noemi  Bañon", "plan": "CRM LTN", "fecha_inicio": "2025-10-23"}];
+var TAR_DATA=[{"tarea": "Fomulario curso mauillaje ", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0.5, "fecha": "2025-05-05"}, {"tarea": "Pipeline curso maquillaje", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "", "automatizaciones": 14.0, "cant_auto": 1.0, "fecha": "2025-05-05"}, {"tarea": "Pipeline Novias ", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "", "automatizaciones": 22.0, "cant_auto": 2.0, "fecha": "2025-08-18"}, {"tarea": "Formulario Novias", "cliente": "Beatriz Zaragoza, Medea", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0.5, "fecha": "2025-08-18"}, {"tarea": "Subir la base de datos de los distintos tipos de clientes", "cliente": "Aflamas", "estado": "Completada", "responsable": "Carla", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-09-23"}, {"tarea": "Scrapping leads eventos empresarios", "cliente": "Aflamas", "estado": "Completada", "responsable": "Carla", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-07"}, {"tarea": "Crear el contenido para la landing de reuniones empresariales", "cliente": "Aflamas", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-09-23"}, {"tarea": "Pensar promociones para los distintos tipos de clientes", "cliente": "Aflamas", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-09-23"}, {"tarea": "Enviar mail Linkedin a Pau y hacer seguimiento", "cliente": "Aflamas", "estado": "Desestimada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-01-15"}, {"tarea": "Crear reporte parcial tiramisú mail y desc + vino gratis WA", "cliente": "Aflamas", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-03"}, {"tarea": "Crear landing comidas empresariales", "cliente": "Aflamas", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-07"}, {"tarea": "Crear subdominio eventos.aflamas.com", "cliente": "Aflamas", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-07"}, {"tarea": "Conectar el dominio a la plataforma aflamas.com", "cliente": "Aflamas", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-07"}, {"tarea": "Crear automatización de pedido de reseñas", "cliente": "Aflamas", "estado": "Desestimada", "responsable": "Carla", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Pedir Thank You page ", "cliente": "Aflamas", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-25"}, {"tarea": "Crear automatización página eventos", "cliente": "Aflamas", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-09"}, {"tarea": "Conectar nuevo teléfono a Wazzap", "cliente": "Aflamas", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-18"}, {"tarea": "Crear email mkt eventos empresariales", "cliente": "Aflamas", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Enviar email mkt eventos empresariales", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Lanzar nuevamente promo trufas", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-10"}, {"tarea": "Seguimiento de reporte Aflamas - Promo take away wpp", "cliente": "Aflamas", "estado": "Completada", "responsable": "Nico", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-04"}, {"tarea": "Proponer planificación ADS Google menú del día", "cliente": "Aflamas", "estado": "Completada", "responsable": "Paola", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Crear landing menú del día/ejecutivo", "cliente": "Aflamas", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-10"}, {"tarea": "Ajustar calendarios Carla y Sheila", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-08"}, {"tarea": "Crear landing page Facial Lumini ", "cliente": "Maria Miró Belleza Minimalista", "estado": "No aplica", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-18"}, {"tarea": "Revisar y modificar subdominio de correo Lidera tu Negocio", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-08"}, {"tarea": "Automatización por rubro Scrap Construcción", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-10"}, {"tarea": "Automatización LTN onboarding CRM", "cliente": "Lidera tu Negocio", "estado": "No iniciada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-11"}, {"tarea": "Modificar idioma seguimiento de pagos", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-12"}, {"tarea": "Automatización recordatorio o reactivación de prospecto", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-12"}, {"tarea": "Crear subdominio de correo Recoambiente", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-01-07"}, {"tarea": "Pipelines y automatizaciones Funnel 1", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-01-15"}, {"tarea": "Crear landing funnel 1 Recoambiente", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-16"}, {"tarea": "Crear correos funnel 1 Recoambiente (2 correos)", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-12-16"}, {"tarea": "Crear funnels y automatizaciones Funnels on line y presencial", "cliente": "Recoambiente", "estado": "Completada", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Crear calendario de citas Recoambiente", "cliente": "Recoambiente", "estado": "No aplica", "responsable": "Carla", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-01-31"}, {"tarea": "Crear subdominio de correo para envío de mails desde la plataforma", "cliente": "Catedral Cadiz", "estado": "No aplica", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-01-29"}, {"tarea": "Crear sheet unificado del scrapping", "cliente": "Recoambiente", "estado": "En curso", "responsable": "Nico", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-19"}, {"tarea": "Sincronizar agenda", "cliente": "Maria Miró Belleza Minimalista", "estado": "Desestimada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-02-26"}, {"tarea": "Automatizar seguimiento proceso de ventas LTN", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Álvaro", "automatizaciones": 0, "cant_auto": 0, "fecha": "2024-10-21"}, {"tarea": "Crear formulario dentro del perfil", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-19"}, {"tarea": "crear una base de datos tipo", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-19"}, {"tarea": "nuevo pipeline y automatizaciones", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-19"}, {"tarea": "Crear texto email mkt María aniversario", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-19"}, {"tarea": "Video demo previo reunión consulta", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-21"}, {"tarea": "Ajustar pipelines y automatizaciones Maraver", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-22"}, {"tarea": "Crear doc de tutoriales", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-22"}, {"tarea": "Crear doc de tutoriales", "cliente": "Jesus Holidays", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-22"}, {"tarea": "Diseño recurso valor - pipeline campaña Met Ads", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-22"}, {"tarea": "Crea email y ajustar video Hydra Defense", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-23"}, {"tarea": "Crear y lanzar campaña email Maria Miro Hydra Defense", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-23"}, {"tarea": "Revisar calendario", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-20"}, {"tarea": "Agregar etapa y automatizaciones pipeline", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-28"}, {"tarea": "Mejorar audio LTN pipeline Meta Ads", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Estefi", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-28"}, {"tarea": "Crear banners", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-29"}, {"tarea": "Crear formulario datos clientes", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-29"}, {"tarea": "Crear snippet", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-29"}, {"tarea": "Ajustes al 30-5 pipeline", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-30"}, {"tarea": "Ajuste en proceso full inifinity expande y élite", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-24"}, {"tarea": "Cambiar audio y agregar calendario Sheila", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-04"}, {"tarea": "Soporte Wazzap", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-04"}, {"tarea": "Crear automatizaciones pipeline Análisis Capitar", "cliente": "Catedral Cadiz", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-04"}, {"tarea": "Crear automatizaciones pipeline Almuerzo ejecutivo junio 25", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 1.0, "cant_auto": 5.0, "fecha": "2025-06-05"}, {"tarea": "Facturar Kawi", "cliente": "Richard Bello Kawi", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-06"}, {"tarea": "Automatización WA seguimiento", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-03"}, {"tarea": "Dar de alta la subcuenta de Kawi", "cliente": "Richard Bello Kawi", "estado": "Completada", "responsable": "Nico", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-09"}, {"tarea": "Agregar video en autom calendario", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-10"}, {"tarea": "Ajuste en autom seguimiento mail", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-12"}, {"tarea": "Histórico del valor de las oportunidades", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-03"}, {"tarea": "Ajuste formulario Recoambiente", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-11"}, {"tarea": "Crear campaña mail primavera 2025", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-11"}, {"tarea": "Ajustar calendarios recurrente Sheila y Carla", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-16"}, {"tarea": "Reuniones estratégicas Full Infinity y Strategist", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-18"}, {"tarea": "Investigar envíos de mail y crear proceso", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-17"}, {"tarea": "Autom reseñas LTN", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-18"}, {"tarea": "Cambiar nombre de cuenta Lead to Business", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-20"}, {"tarea": "Ajustar campaña Aflamas email", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-18"}, {"tarea": "Crear campañas WA Hydra Defense", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-30"}, {"tarea": "Seguimiento de automatización Hydra defense", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Nico", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-29"}, {"tarea": "Ajustar Base de Datos", "cliente": "Recoambiente", "estado": "Bloqueada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-11"}, {"tarea": "Crear form novias", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-07"}, {"tarea": "Crear pipeline copia del pipeline póliza auto", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-08"}, {"tarea": "Enviar factura de WhatsApp ", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-11"}, {"tarea": "Crear nuevo pipeline + automatizaciones Meta Ads", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-08"}, {"tarea": "Seguimiento campaña Menú primavera", "cliente": "Aflamas", "estado": "Completada", "responsable": "Nico", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-13"}, {"tarea": "Ajustar autom y pipeline Azahar Suite Holiday", "cliente": "Jesus Holidays", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-16"}, {"tarea": "Crear email mkt campaña de verano", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-21"}, {"tarea": "Crear video y tutorial de cómo se creo el pipeline y la autom", "cliente": "Manuel Maraver", "estado": "No iniciada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-10"}, {"tarea": "Crear campaña de email mkt envases peligrosos y envases no peligrosos", "cliente": "Recoambiente", "estado": "No iniciada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-10"}, {"tarea": "Campaña email mkt separación de residuos", "cliente": "Recoambiente", "estado": "No iniciada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-10"}, {"tarea": "Volver a cargar la base de datos del cliente", "cliente": "Recoambiente", "estado": "No iniciada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-11"}, {"tarea": "Crear fomulario ingreso de leads", "cliente": "Richard Bello Kawi", "estado": "No iniciada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-14"}, {"tarea": "Crear pipeline y autom seguimiento leads ", "cliente": "Richard Bello Kawi", "estado": "No iniciada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-14"}, {"tarea": "Que ingresen a WA con nombre y apellido", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-23"}, {"tarea": "revisar correo Carli en LTN", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-23"}, {"tarea": "Ver posibilidades entre Google Ads y nuestra plataforma", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-06-05"}, {"tarea": "Crear calendario examen visual", "cliente": "Federópticos", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-24"}, {"tarea": "Crear campaña mail y WA de separación de residuos", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-25"}, {"tarea": "Canales de comuno y equipo-  Ajustes en los onboardings", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-07-23"}, {"tarea": "Crear pipeline y automatizaciones talleres automaquillaje", "cliente": "Beatriz Zaragoza", "estado": "En curso", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-08-21"}, {"tarea": "Formulario regularización Maraver ", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-08-22"}, {"tarea": "Integrar Wallapop e Idealista con LTN", "cliente": "Lidera tu Negocio", "estado": "Desestimada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-08-22"}, {"tarea": "Video explicativo Jesús", "cliente": "Jesus Holidays", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-08-22"}, {"tarea": "Calendario Jesús Holidays", "cliente": "Jesus Holidays", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-25"}, {"tarea": "Actualización pipeline novias ", "cliente": "Beatriz Zaragoza", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-05-27"}, {"tarea": "Revisar autom Hasta Luego Maricarmen", "cliente": "Lidera tu Negocio", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-09-01"}, {"tarea": "Pipeline Servicio Fúnebre", "cliente": "Manuel Maraver", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-09-16"}, {"tarea": "Pipeline y automatización Lumina", "cliente": "Maria Miró Belleza Minimalista", "estado": "En curso", "responsable": "Ele", "automatizaciones": 1.0, "cant_auto": 3.0, "fecha": "2025-09-25"}, {"tarea": "Diseño campaña email Lumina", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "", "automatizaciones": 0.5, "cant_auto": 0, "fecha": ""}, {"tarea": "Detener campaña Meta Ads Hydra Defense", "cliente": "Maria Miró Belleza Minimalista", "estado": "No iniciada", "responsable": "Paola", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-10-09"}, {"tarea": "Activar campaña Meta ads colorimetria", "cliente": "Maria Miró Belleza Minimalista", "estado": "No iniciada", "responsable": "Paola", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-10-09"}, {"tarea": "Activar campaña email Lumina", "cliente": "Maria Miró Belleza Minimalista", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": "2025-10-09"}, {"tarea": "Crear Calendario para Academia Premium", "cliente": "Acadamia Premium", "estado": "En curso", "responsable": "", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Crear Pipeline Aflamas corporativo fin de año", "cliente": "Aflamas", "estado": "Completada", "responsable": "Ele", "automatizaciones": 1.0, "cant_auto": 5.0, "fecha": "2025-10-22"}, {"tarea": "Crear Pipeline Aflamas Menú septiembre 2025", "cliente": "Aflamas", "estado": "Completada", "responsable": "Matias", "automatizaciones": 1.0, "cant_auto": 5.0, "fecha": "2025-09-18"}, {"tarea": "Registros dns enviado enviado a Maskim. Sin respuesta", "cliente": "Aire Academy", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0, "cant_auto": 0, "fecha": ""}, {"tarea": "Crear automatizaciones para la campaña Seguimiento contratación de servicios", "cliente": "Recoambiente", "estado": "Completada", "responsable": "Matias", "automatizaciones": 0.5, "cant_auto": 5.0, "fecha": "2025-10-29"}, {"tarea": "Crear pipeline y automatizaciones de Servicio Personalizado de Dosificación (SPD", "cliente": "Farmacia Curiel", "estado": "No iniciada", "responsable": "", "automatizaciones": 2.0, "cant_auto": 19.0, "fecha": ""}, {"tarea": "Crear pipeline y automatizaciones de gestión Meta Ads", "cliente": "Espacio Noemi Bañon", "estado": "Completada", "responsable": "Matias", "automatizaciones": 2.0, "cant_auto": 19.0, "fecha": "2025-11-13"}, {"tarea": "Crear pipeline y automatizaciones de Fin de año corp email - licor regalo 25", "cliente": "Aflamas", "estado": "Completada", "responsable": "Ele", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": ""}, {"tarea": "Crear automatizaciones de incripción de alumnos", "cliente": "Acadamia Premium", "estado": "En curso", "responsable": "Matias", "automatizaciones": 2.0, "cant_auto": 16.0, "fecha": "2025-11-25"}, {"tarea": "Creación del pipeline “Seguimiento de leads - WhatsAPP", "cliente": "Cefiba", "estado": "Completada", "responsable": "Ele", "automatizaciones": 2.0, "cant_auto": 13.0, "fecha": "2025-10-29"}, {"tarea": "Creación de calendario y pipeline “Calendario visita a domicilio”-", "cliente": "Cefiba", "estado": "En curso", "responsable": "Matias", "automatizaciones": 1.0, "cant_auto": 8.0, "fecha": "2025-11-25"}, {"tarea": "automatización retos fin de año 2025", "cliente": "Aflamas", "estado": "En curso", "responsable": "Matias", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2025-11-27"}, {"tarea": "automatización navidad en casa - Whatsapp", "cliente": "Aflamas", "estado": "En curso", "responsable": "Matias", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2025-12-15"}, {"tarea": "automatización navidad en casa - Email mkt", "cliente": "Aflamas", "estado": "En curso", "responsable": "Matias", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2025-12-18"}, {"tarea": "Automatización reseñas", "cliente": "Medea", "estado": "Completada", "responsable": "", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2026-01-09"}, {"tarea": "Automatizacion Cursos de peluquería", "cliente": "Acadamia Premium", "estado": "En curso", "responsable": "", "automatizaciones": 2.0, "cant_auto": 21.0, "fecha": "2026-01-15"}, {"tarea": "Automatizacion promo capilar", "cliente": "Medea", "estado": "Completada", "responsable": "", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2026-01-23"}, {"tarea": "Automatizaciones club diabéticos", "cliente": "Farmacia Curiel", "estado": "Completada", "responsable": "", "automatizaciones": 2.0, "cant_auto": 10.0, "fecha": "2026-01-26"}, {"tarea": "Campaña nuevo local", "cliente": "Federópticos", "estado": "En curso", "responsable": "Matias", "automatizaciones": 0.5, "cant_auto": 0.5, "fecha": "2025-12-15"}, {"tarea": "campaña WA peluquería", "cliente": "Acadamia Premium", "estado": "En curso", "responsable": "", "automatizaciones": 2.0, "cant_auto": 23.0, "fecha": "2026-02-04"}, {"tarea": "WA hidratación capilar", "cliente": "Medea", "estado": "Completada", "responsable": "", "automatizaciones": 1.0, "cant_auto": 12.0, "fecha": "2026-02-05"}, {"tarea": "campaña audífonos - WA", "cliente": "Federópticos", "estado": "En curso", "responsable": "", "automatizaciones": 1.0, "cant_auto": 10.0, "fecha": "2026-02-10"}, {"tarea": "Inscripción de alumnos y pipeline complementario", "cliente": "Acadamia Premium", "estado": "Completada", "responsable": "", "automatizaciones": 2.0, "cant_auto": 28.0, "fecha": "2026-02-06"}, {"tarea": "campaña Flash facial", "cliente": "Medea", "estado": "Completada", "responsable": "", "automatizaciones": 1.0, "cant_auto": 10.0, "fecha": "2026-03-10"}];
 
-/* ═══════════════════════════════════════════
-   DATOS FALLBACK (hardcodeados)
-═══════════════════════════════════════════ */
-var FALLBACK = {
-  "2025": {
-    m:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
-    fac:[3123,2863,4112,6355,3277,3922,5089,4043,3619,11439,6075,12870],
-    gas:[2469,3280,3520,4358,4760,5063,5204,4940,5631,5972,6392,6368],
-    su: [2147,2827,2572,3635,4128,4344,4231,3682,4730,4819,4783,5221],
-    pl: [321,452,688,533,518,0,537,610,577,664,1069,753],
-    ot: [0,0,0,0,0,220,0,0,31,48,300,394],
-    ad: [0,0,260,188,112,499,435,647,291,439,238,0],
-    ld: [0,0,0,0,1,6,4,16,20,50,4,0],
-    ct: [2,13,6,6,5,2,6,21,30,33,24,18],
-    carla:  [1,8,6,4,5,2,3,14,22,23,17,13],
-    sheila: [1,4,0,2,0,0,2,6,8,9,7,2],
-    cd: [0,0,0,0,0,0,0,8,5,1,3,1],
-    cr: [0,0,0,0,0,0,0,1,2,9,12,13],
-    tc:[["Aflamas",10015],["Maraver",8924],["Recoambiente",7976],["María Miró",6729],["Catedral Cádiz",4993],["Academia Premium",4568],["Medea",3995],["Farmacia Curiel",3488],["Beatriz Zaragoza",3156],["Federópticos",4853]],
-    cl:[["Aflamas","Infinity Expande",10015,"Activo"],["Maraver","Infinity Expande",8924,"Activo"],["Recoambiente","Infinity Expande",7976,"Activo"],["María Miró Belleza Min.","Infinity Expande",6729,"Activo"],["Catedral Cádiz","Infinity Expande",4993,"Activo"],["Academia Premium LC","CRM LTN",4568,"Activo"],["Medea Peluquería","Infinity Expande",3995,"Activo"],["Farmacia Curiel","CRM LTN",3488,"Activo"],["Beatriz Zaragoza","CRM LTN",3156,"Activo"],["Federópticos (ambas)","Infinity Expande",4853,"Activo"],["BC CEFIBA SL","CRM LTN",1694,"Activo"],["Noemi Bañon","CRM LTN",1634,"Activo"],["Kawi Piscinas","CRM LTN",1300,"Activo"],["HolidaysForU","CRM LTN",1275,"Activo"],["Susana Basurto","Inactivo",590,"Inactivo"],["Avecan","CRM LTN",420,"Activo"],["Radu / Aire Academy","CRM LTN",603,"Activo"],["Experto Dual","Inactivo",295,"Inactivo"],["Volver Aquí","CRM gratuito",280,"Gratuito"]],
-    cc:[["Aflamas",6],["Recoambiente",6],["María Miró",6],["Catedral Cádiz",5],["SCI Geriatría",5],["Maraver",5],["Beatriz Zaragoza",4],["Jesus Cuberos",4]],
-    q4:[["Academia Premium LC","CRM LTN","oct-25"],["Radu Ene","CRM LTN","sep-25"],["Lidia Casanova","Infinity Expande","oct-25"],["Nacho Vert","CRM LTN","oct-25"],["Noemi Bañon","CRM LTN","oct-25"]],
-    et:{"Completada":105,"En curso":13,"No iniciada":10,"Desestimada":4,"No aplica":3,"Bloqueada":1},
-    fl:{"Bienvenida":44,"Agendó Demo":10,"Msg de audio":8,"Recibió presupuesto":7,"Recibió llamada":3,"Video de reseña":2,"Cliente perdido":1},
-    resp:[["Ele",40],["Matias",40],["Álvaro",13],["Estefi",9],["Nico",5],["Carla",4],["Paola",3]],
-    auto_resp:[["Matias",60],["Ele",21],["Estefi",0],["Carla",0],["Álvaro",0]],
-    tar_cli:[["LTN Interno",31],["Aflamas",30],["Recoambiente",18],["María Miró",13],["Beatriz Zaragoza",8],["Manuel Maraver",7],["Academia Premium",5],["Jesus Holidays",4]]
-  },
-  "2026": {
-    m:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
-    fac:[5636,5621,0,0,0,0,0,0,0,0,0,0],
-    gas:[7155,5962,0,0,0,0,0,0,0,0,0,0],
-    su: [4868,4772,0,0,0,0,0,0,0,0,0,0],
-    pl: [632,890,0,0,0,0,0,0,0,0,0,0],
-    ot: [1654,300,0,0,0,0,0,0,0,0,0,0],
-    ad: [87,180,0,0,0,0,0,0,0,0,0,0],
-    ld: [0,0,0,0,0,0,0,0,0,0,0,0],
-    ct: [10,7,11,0,0,0,0,0,0,0,0,0],
-    carla:  [6,4,9,0,0,0,0,0,0,0,0,0],
-    sheila: [3,2,2,0,0,0,0,0,0,0,0,0],
-    cd: [2,1,2,0,0,0,0,0,0,0,0,0],
-    cr: [6,3,7,0,0,0,0,0,0,0,0,0],
-    tc:[["Medea",1610],["Aflamas",1180],["Academia Premium",990],["Maraver",919],["Farmacia Curiel",630],["Federópticos",629],["Recoambiente",629],["Beatriz Zaragoza",458],["Kawi Piscinas",340],["Avecan",36]],
-    cl:[["Medea Peluquería","Infinity Expande",1610,"Activo"],["Aflamas","Infinity Expande",1180,"Activo"],["Maraver","Infinity Expande",919,"Activo"],["Academia Premium LC","CRM LTN",990,"Activo"],["Farmacia Curiel","CRM LTN",630,"Activo"],["Federópticos","Infinity Expande",629,"Activo"],["Recoambiente","Infinity Expande",629,"Activo"],["Beatriz Zaragoza","CRM LTN",458,"Activo"],["Kawi Piscinas","CRM LTN",340,"Activo"],["Avecan","CRM LTN",36,"Activo"]],
-    cc:[["Julio Migliore",3],["Rosa Menéndez",3],["Yolanda García",3],["Carla Vallejos",2],["Maribel Curiel",2]],
-    q4:[],
-    et:{"Completada":105,"En curso":13,"No iniciada":10,"Desestimada":4,"No aplica":3,"Bloqueada":1},
-    fl:{"Bienvenida":44,"Agendó Demo":10,"Msg de audio":8,"Recibió presupuesto":7,"Recibió llamada":3,"Video de reseña":2,"Cliente perdido":1},
-    resp:[["Ele",40],["Matias",40],["Álvaro",13],["Estefi",9],["Nico",5],["Carla",4],["Paola",3]],
-    auto_resp:[["Matias",60],["Ele",21],["Estefi",0],["Carla",0],["Álvaro",0]],
-    tar_cli:[["LTN Interno",31],["Aflamas",30],["Recoambiente",18],["María Miró",13],["Beatriz Zaragoza",8],["Manuel Maraver",7],["Academia Premium",5],["Jesus Holidays",4]]
-  }
-};
 
-/* ═══════════════════════════════════════════
-   FIREBASE REST HELPERS
-═══════════════════════════════════════════ */
-function fbWrite(year, data) {
-  var url = FB_BASE + '/' + year + '?key=' + FB_KEY;
-  return fetch(url, {
-    method: 'PATCH',
-    credentials: 'omit',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fields: { data: { stringValue: JSON.stringify(data) } } })
-  });
+/* ── CONFIG ── */
+var FB_PROJ='timetracker-ltn';
+var FB_KEY='AIzaSyBiMJCGP9L5x3qBTbD2EUZAyMEOS7v8uz8';
+var FB_BASE='https://firestore.googleapis.com/v1/projects/'+FB_PROJ+'/databases/(default)/documents';
+var LS='ltn-v4';
+var MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+var MESES_F=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+var EQUIPO=['Carla','Sheila','Matias','Juli','Elena','Estefanía','Jessy','Paola','Álvaro','Nico'];
+var PLANES=['Infinity Expande','CRM LTN','CRM gratuito','Inactivo'];
+var FASES_L=['Bienvenida','Agendó Demo','Mensaje de audio','Recibió presupuesto','Recibió llamada','Video de reseña','Cliente','Cliente perdido'];
+
+/* ── ESTADO ── */
+var YEAR=2025;
+var TT_ENTRIES=[];
+var NEW_FAC=[], NEW_GAS=[], NEW_CITAS=[], NEW_LEADS=[], NEW_CLI=[];
+var LC={};
+var CUR_SEC='res';
+
+/* ── COLORES ── */
+var PU='#3c2b86',MG='#e61978',GN='#22d3a5',RD='#f05a7e',AM='#f59e0b';
+
+/* ── UTILS ── */
+function S(a){return a.reduce(function(s,v){return s+v;},0);}
+function fe(v){return '€'+Math.round(v).toLocaleString('es-ES');}
+function ff(v){return v===0?'€0':v>=1000?'€'+(v/1000).toFixed(1)+'k':'€'+v;}
+function mk(id,cfg){var el=document.getElementById(id);if(!el)return;if(LC[id])LC[id].destroy();LC[id]=new Chart(el,cfg);}
+function byYear(arr){return arr.filter(function(e){return +e.año===YEAR;});}
+function byYearMes(arr){
+  var t=[0,0,0,0,0,0,0,0,0,0,0,0];
+  byYear(arr).forEach(function(e){if(e.mes>=1&&e.mes<=12)t[e.mes-1]+=(e.importe||0);});
+  return t;
 }
-
-function fbRead(year) {
-  var url = FB_BASE + '/' + year + '?key=' + FB_KEY;
-  return fetch(url, { credentials: 'omit' })
-    .then(function(r) { return r.json(); })
-    .then(function(doc) {
-      if (doc && doc.fields && doc.fields.data) {
-        return JSON.parse(doc.fields.data.stringValue);
-      }
-      return null;
-    });
+function groupSum(arr,gk,vk){
+  var r={};
+  arr.forEach(function(e){var k=e[gk]||'—';r[k]=(r[k]||0)+(e[vk]||0);});
+  return r;
 }
-
-/* ═══════════════════════════════════════════
-   SEED INICIAL
-═══════════════════════════════════════════ */
-function doSeed() {
-  var btn = document.getElementById('seedBtn');
-  btn.disabled = true;
-  btn.textContent = 'Subiendo...';
-  setSyncStatus('spin', 'Subiendo a Firebase...');
-
-  Promise.all([fbWrite('2025', FALLBACK['2025']), fbWrite('2026', FALLBACK['2026'])])
-    .then(function() {
-      btn.textContent = '✓ Datos subidos';
-      setSyncStatus('ok', 'Firebase sincronizado');
-      saveLs('2025', FALLBACK['2025']);
-      saveLs('2026', FALLBACK['2026']);
-      setTimeout(function() {
-        var panel = document.getElementById('seedPanel');
-        if (panel) panel.remove();
-      }, 2000);
-    })
-    .catch(function(e) {
-      btn.disabled = false;
-      btn.textContent = 'Reintentar';
-      setSyncStatus('err', 'Error — revisá la consola');
-      console.error('Seed error:', e);
-    });
-}
-
-/* ═══════════════════════════════════════════
-   LOCAL STORAGE CACHE
-═══════════════════════════════════════════ */
-function saveLs(year, data) {
-  try {
-    var stored = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-    stored[year] = { data: data, ts: Date.now() };
-    localStorage.setItem(LS_KEY, JSON.stringify(stored));
-  } catch(e) {}
-}
-
-function loadLs(year) {
-  try {
-    var stored = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-    return stored[year] ? stored[year].data : null;
-  } catch(e) { return null; }
-}
-
-function hasSeedDone() {
-  try {
-    var stored = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-    return !!(stored['2025'] || stored['2026']);
-  } catch(e) { return false; }
-}
-
-/* ═══════════════════════════════════════════
-   SYNC STATUS UI
-═══════════════════════════════════════════ */
-function setSyncStatus(state, txt) {
-  var dot = document.getElementById('syncDot');
-  var label = document.getElementById('syncTxt');
-  dot.className = 'sync-dot ' + state;
-  label.textContent = txt;
-}
-
-/* ═══════════════════════════════════════════
-   ESTADO GLOBAL
-═══════════════════════════════════════════ */
-var DAT = { '2025': null, '2026': null };
-var Y = 2025;
-var LC = {};
-var PU='#3c2b86', MG='#e61978', GN='#22d3a5', RD='#f05a7e', AM='#f59e0b';
-
-function D() { return DAT[String(Y)] || FALLBACK[String(Y)]; }
-
-/* ═══════════════════════════════════════════
-   CARGA DE DATOS
-═══════════════════════════════════════════ */
-function initData() {
-  // 1. Cargar desde localStorage primero (instantáneo)
-  var ls25 = loadLs('2025');
-  var ls26 = loadLs('2026');
-  if (ls25) DAT['2025'] = ls25;
-  if (ls26) DAT['2026'] = ls26;
-
-  // Si ya hay caché, renderizar inmediatamente
-  if (ls25 || ls26) {
-    bAll();
-    setSyncStatus('spin', 'Actualizando...');
-  }
-
-  // Si ya se hizo seed antes, ocultar el panel
-  if (hasSeedDone()) {
-    var panel = document.getElementById('seedPanel');
-    if (panel) panel.remove();
-  }
-
-  // 2. En background, sincronizar con Firebase
-  Promise.all([
-    fbRead('2025').catch(function(){ return null; }),
-    fbRead('2026').catch(function(){ return null; })
-  ]).then(function(results) {
-    var fb25 = results[0], fb26 = results[1];
-    var updated = false;
-
-    if (fb25) { DAT['2025'] = fb25; saveLs('2025', fb25); updated = true; }
-    if (fb26) { DAT['2026'] = fb26; saveLs('2026', fb26); updated = true; }
-
-    if (updated) {
-      bAll();
-      setSyncStatus('ok', 'Sincronizado con Firebase');
-      var panel = document.getElementById('seedPanel');
-      if (panel) panel.remove();
-    } else if (!ls25 && !ls26) {
-      // No hay nada en ningún lado — usar fallback
-      DAT['2025'] = FALLBACK['2025'];
-      DAT['2026'] = FALLBACK['2026'];
-      bAll();
-      setSyncStatus('err', 'Sin conexión a Firebase');
-    } else {
-      setSyncStatus('ok', 'Firebase actualizado');
-    }
-  });
-}
-
-/* ═══════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════ */
-function S(a) { return a.reduce(function(s,v){ return s+v; }, 0); }
-function fe(v) { return '€' + Math.round(v).toLocaleString('es-ES'); }
-function ff(v) { return v===0?'€0':v>=1000?'€'+(v/1000).toFixed(1)+'k':'€'+v; }
-
-function mk(id, cfg) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  if (LC[id]) LC[id].destroy();
-  LC[id] = new Chart(el, cfg);
-}
-
-function co(e) {
-  e = e || {};
-  var o = {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { usePointStyle:true, padding:12, boxWidth:8, font:{size:11} } },
-      tooltip: { backgroundColor:'rgba(10,8,28,.96)', padding:9, cornerRadius:8 }
-    },
-    scales: {
-      x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#8b80b8',font:{size:11}} },
-      y: { grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#8b80b8',font:{size:11}} }
-    }
-  };
-  if (e.s) { o.scales.x.stacked = true; o.scales.y.stacked = true; }
-  if (e.ii) o.indexAxis = e.ii;
-  if (e.yf) o.scales.y.ticks.callback = e.yf;
-  if (e.xf) o.scales.x.ticks.callback = e.xf;
+function sortDesc(obj){return Object.entries(obj).sort(function(a,b){return b[1]-a[1];});}
+function co(e){
+  e=e||{};
+  var o={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,padding:10,boxWidth:7,font:{size:10}}},tooltip:{backgroundColor:'rgba(10,8,28,.96)',padding:8,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8b80b8',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8b80b8',font:{size:10}}}}};
+  if(e.s){o.scales.x.stacked=true;o.scales.y.stacked=true;}
+  if(e.ii)o.indexAxis=e.ii;
+  if(e.yf)o.scales.y.ticks.callback=e.yf;
+  if(e.xf)o.scales.x.ticks.callback=e.xf;
   return o;
 }
-
-function prog(lbl, valStr, maxVal, col) {
-  var num = parseFloat(valStr) || 0;
-  var pct = maxVal > 0 ? Math.round(num / maxVal * 100) : 0;
-  var bg = col ? col : 'linear-gradient(90deg,' + PU + ',' + MG + ')';
-  return '<div class="pr"><div class="pr-h"><span>' + lbl + '</span><span>' + valStr + '</span></div>'
-    + '<div class="pr-t"><div class="pr-f" style="width:' + pct + '%;background:' + bg + '"></div></div></div>';
+function prog(lbl,valStr,maxVal,col){
+  var num=parseFloat(valStr)||0,pct=maxVal>0?Math.round(num/maxVal*100):0;
+  var bg=col?col:'linear-gradient(90deg,'+PU+','+MG+')';
+  return '<div class="pr"><div class="pr-h"><span>'+lbl+'</span><span>'+valStr+'</span></div><div class="pr-t"><div class="pr-f" style="width:'+pct+'%;background:'+bg+'"></div></div></div>';
 }
-
-function kpiHtml(arr) {
-  return arr.map(function(k) {
-    var col = k.col ? ' style="color:' + k.col + '"' : '';
-    return '<div class="kpi" style="--c1:' + k.c1 + ';--c2:' + k.c2 + '">'
-      + '<div class="kl">' + k.l + '</div>'
-      + '<div class="kv"' + col + '>' + k.v + '</div>'
-      + '<div class="ks">' + k.s + '</div></div>';
+function kpi(arr){
+  return arr.map(function(k){
+    var col=k.col?' style="color:'+k.col+'"':'';
+    return '<div class="kpi" style="--c1:'+k.c1+';--c2:'+k.c2+'"><div class="kl">'+k.l+'</div><div class="kv"'+col+'>'+k.v+'</div><div class="ks">'+k.s+'</div></div>';
   }).join('');
 }
+function setSync(st,tx){document.getElementById('syncDot').className='sync-dot '+st;document.getElementById('syncTxt').textContent=tx;}
 
-function lY(y) { Y = +y; document.getElementById('pillYear').textContent = Y; bAll(); }
+/* ── FIREBASE ── */
+function fbRead(col,doc){return fetch(FB_BASE+'/'+col+'/'+doc+'?key='+FB_KEY,{credentials:'omit'}).then(function(r){return r.json();});}
+function fbPatch(col,doc,fields){return fetch(FB_BASE+'/'+col+'/'+doc+'?key='+FB_KEY,{method:'PATCH',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fields})});}
+function fbPost(col,fields){return fetch(FB_BASE+'/'+col+'?key='+FB_KEY,{method:'POST',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fields})});}
 
-function lS(id, el) {
-  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('on'); });
-  document.querySelectorAll('.nav-a').forEach(function(a){ a.classList.remove('on'); });
-  document.getElementById('s-' + id).classList.add('on');
-  el.classList.add('on');
-  setTimeout(function() {
-    if (id==='fin') bFin(); else if (id==='com') bCom(); else if (id==='cli') bCli(); else bTar();
-  }, 40);
+function lsGet(k){try{return JSON.parse(localStorage.getItem(LS+k)||'null');}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(LS+k,JSON.stringify(v));}catch(e){}}
+
+/* ── SEED ── */
+function doSeed(){
+  var btn=document.getElementById('seedBtn');
+  btn.disabled=true;btn.textContent='Sincronizando...';setSync('spin','Subiendo...');
+  var seed={
+    seeded:{booleanValue:true},
+    seedDate:{stringValue:new Date().toISOString()}
+  };
+  fbPatch('dashboard-ltn','meta',seed).then(function(){
+    btn.textContent='✓ Listo';setSync('ok','Sincronizado');
+    lsSet('seed',true);
+    setTimeout(function(){var p=document.getElementById('seedPanel');if(p)p.remove();},1500);
+  }).catch(function(e){btn.disabled=false;btn.textContent='Reintentar';setSync('err','Error');});
 }
 
-function bAll() { bFin(); bCom(); bCli(); bTar(); }
+/* ── INIT DATA ── */
+function initData(){
+  if(lsGet('seed')){var sp=document.getElementById('seedPanel');if(sp)sp.remove();}
+  var cachedNew=lsGet('new_entries');
+  if(cachedNew){
+    NEW_FAC=cachedNew.fac||[];NEW_GAS=cachedNew.gas||[];
+    NEW_CITAS=cachedNew.citas||[];NEW_LEADS=cachedNew.leads||[];NEW_CLI=cachedNew.cli||[];
+  }
+  var cachedTT=lsGet('tt');
+  if(cachedTT)TT_ENTRIES=cachedTT;
+  bAll();
+  setSync('spin','Sincronizando...');
+  Promise.all([
+    fbRead('dashboard-ltn','new_entries').catch(function(){return null;}),
+    fbRead('timetracker','ltn').catch(function(){return null;})
+  ]).then(function(res){
+    var updated=false;
+    if(res[0]&&res[0].fields){
+      try{
+        var f=res[0].fields;
+        if(f.fac)NEW_FAC=JSON.parse(f.fac.stringValue||'[]');
+        if(f.gas)NEW_GAS=JSON.parse(f.gas.stringValue||'[]');
+        if(f.citas)NEW_CITAS=JSON.parse(f.citas.stringValue||'[]');
+        if(f.leads)NEW_LEADS=JSON.parse(f.leads.stringValue||'[]');
+        if(f.cli)NEW_CLI=JSON.parse(f.cli.stringValue||'[]');
+        lsSet('new_entries',{fac:NEW_FAC,gas:NEW_GAS,citas:NEW_CITAS,leads:NEW_LEADS,cli:NEW_CLI});
+        updated=true;
+      }catch(e){}
+    }
+    if(res[1]&&res[1].fields&&res[1].fields.entries){
+      try{TT_ENTRIES=JSON.parse(res[1].fields.entries.stringValue);lsSet('tt',TT_ENTRIES);updated=true;}catch(e){}
+    }
+    if(updated)bAll();
+    setSync('ok','Sincronizado');
+  });
+}
 
-/* ═══ FINANCIERO ═══ */
-function bFin() {
-  var d = D();
-  var f=d.fac, g=d.gas, s=d.su, p=d.pl, a=d.ad, ot=d.ot;
-  var tf=S(f), tg=S(g), tn=tf-tg, ts=S(s), tp=S(p), ta=S(a), tot2=S(ot);
-  var mc=f.filter(function(v){return v>0;}).length, av=mc?Math.round(tf/mc):0;
+function saveNewEntries(){
+  var data={
+    fac:{stringValue:JSON.stringify(NEW_FAC)},
+    gas:{stringValue:JSON.stringify(NEW_GAS)},
+    citas:{stringValue:JSON.stringify(NEW_CITAS)},
+    leads:{stringValue:JSON.stringify(NEW_LEADS)},
+    cli:{stringValue:JSON.stringify(NEW_CLI)}
+  };
+  lsSet('new_entries',{fac:NEW_FAC,gas:NEW_GAS,citas:NEW_CITAS,leads:NEW_LEADS,cli:NEW_CLI});
+  fbPatch('dashboard-ltn','new_entries',data).catch(function(e){console.error('Save error:',e);});
+}
 
-  document.getElementById('k-fin').innerHTML = kpiHtml([
-    {l:'Facturación Total', v:fe(tf), s:Y===2026?'Ene–Feb parcial':'12 meses completos', c1:PU, c2:MG},
-    {l:'Gastos Totales',    v:fe(tg), s:'Nómina + Plat. + Ads + Otros', c1:MG, c2:'#9333ea'},
-    {l:'Neto del Período',  v:fe(tn), s:'Margen: '+(tf?Math.round(tn/tf*100):0)+'%', c1:GN, c2:PU, col:tn>=0?GN:RD},
-    {l:'Promedio Mensual',  v:fe(av), s:'Por mes con datos', c1:AM, c2:MG}
+/* ── NAVEGACIÓN ── */
+function lY(y){YEAR=+y;bAll();}
+function lS(id,el){
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nav-a').forEach(function(a){a.classList.remove('on');});
+  document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
+  CUR_SEC=id;
+  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea'};
+  document.getElementById('addLabel').textContent=labels[id]||'entrada';
+  document.getElementById('addBtn').style.display=id==='tar'||id==='res'?'none':'flex';
+  setTimeout(function(){if(id==='res')bRes();else if(id==='fac')bFac();else if(id==='gas')bGas();else if(id==='cit')bCit();else if(id==='led')bLed();else if(id==='cli')bCli();else bTar();},40);
+}
+function bAll(){bRes();bFac();bGas();bCit();bLed();bCli();bTar();}
+
+/* ── DRAWER ── */
+var FORMS={
+  fac:'<div class="fr"><div class="fg"><label class="fl">Año</label><select class="fi" id="d-año"><option>2024</option><option selected>2025</option><option>2026</option><option>2027</option></select></div><div class="fg"><label class="fl">Mes</label><select class="fi" id="d-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div></div><div class="fg"><label class="fl">Cliente</label><input list="cli-list" class="fi" id="d-cli" placeholder="Nombre del cliente"></div><div class="fg"><label class="fl">Concepto / Ítem</label><input class="fi" id="d-item" placeholder="Ej: Pago 3 Plan Expande"></div><div class="fg"><label class="fl">Importe (€)</label><input type="number" class="fi" id="d-imp" placeholder="0.00" step="0.01"></div><button class="btn-save" onclick="submitFac()">Guardar entrada</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
+  gas:'<div class="fr"><div class="fg"><label class="fl">Año</label><select class="fi" id="d-año"><option>2024</option><option selected>2025</option><option>2026</option><option>2027</option></select></div><div class="fg"><label class="fl">Mes</label><select class="fi" id="d-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div></div><div class="fg"><label class="fl">Categoría</label><select class="fi" id="d-cat"><option>Sueldos y freelancers</option><option>Plataformas y suscripciones</option><option>Publicidad Ads</option><option>Otros</option></select></div><div class="fg"><label class="fl">Concepto (opcional)</label><input class="fi" id="d-item" placeholder="Ej: Meta Ads julio"></div><div class="fg"><label class="fl">Importe (€)</label><input type="number" class="fi" id="d-imp" placeholder="0.00" step="0.01"></div><button class="btn-save" onclick="submitGas()">Guardar gasto</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
+  cit:'<div class="fg"><label class="fl">Fecha</label><input type="date" class="fi" id="d-fecha"></div><div class="fg"><label class="fl">Cliente</label><input list="cli-list" class="fi" id="d-cli" placeholder="Nombre del cliente"></div><div class="fr"><div class="fg"><label class="fl">Tipo</label><select class="fi" id="d-tipo"><option>Demo</option><option>Recurrente</option><option>Estratégica</option><option>Implementación</option><option>Auditoría</option><option>Otra</option></select></div><div class="fg"><label class="fl">Persona</label><select class="fi" id="d-pers"><option>Carla</option><option>Sheila</option><option>Matias</option><option>Juli</option><option>Otra</option></select></div></div><div class="fg"><label class="fl">Comentario (opcional)</label><input class="fi" id="d-com" placeholder="Estratégica, seguimiento..."></div><button class="btn-save" onclick="submitCit()">Guardar cita</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
+  led:'<div class="fg"><label class="fl">Nombre del lead</label><input class="fi" id="d-nom" placeholder="Nombre y apellido"></div><div class="fr"><div class="fg"><label class="fl">Fuente</label><select class="fi" id="d-fuen"><option>Meta Ads</option><option>Referido</option><option>Web</option><option>Orgánico</option><option>Otro</option></select></div><div class="fg"><label class="fl">Asignado a</label><select class="fi" id="d-asig"><option>Carla</option><option>Sheila</option><option>Sin asignar</option></select></div></div><div class="fg"><label class="fl">Fase</label><select class="fi" id="d-fase"><option>Bienvenida</option><option>Agendó Demo</option><option>Mensaje de audio</option><option>Recibió presupuesto</option><option>Recibió llamada</option><option>Video de reseña</option><option>Cliente</option><option>Cliente perdido</option></select></div><div class="fg"><label class="fl">Valor estimado (€)</label><input type="number" class="fi" id="d-val" placeholder="0" step="1"></div><button class="btn-save" onclick="submitLed()">Guardar lead</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
+  cli:'<div class="fg"><label class="fl">Nombre del cliente</label><input class="fi" id="d-nom" placeholder="Nombre de la empresa"></div><div class="fr"><div class="fg"><label class="fl">Plan</label><select class="fi" id="d-plan"><option>Infinity Expande</option><option>CRM LTN</option><option>CRM gratuito</option><option>Inactivo</option></select></div><div class="fg"><label class="fl">Estado</label><select class="fi" id="d-est"><option>Activo</option><option>Inactivo</option><option>Gratuito</option></select></div></div><div class="fg"><label class="fl">Fecha de alta</label><input type="date" class="fi" id="d-fecha"></div><button class="btn-save" onclick="submitCli()">Guardar cliente</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>'
+};
+
+var TITLES={fac:'Nueva Facturación',gas:'Nuevo Gasto',cit:'Nueva Cita',led:'Nuevo Lead',cli:'Nuevo Cliente'};
+
+function openDrawer(){
+  var sec=CUR_SEC;
+  if(!FORMS[sec])return;
+  document.getElementById('drTitle').textContent=TITLES[sec]||'Nueva entrada';
+  document.getElementById('drBody').innerHTML=FORMS[sec];
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBg').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBg').classList.remove('open');
+}
+
+function gv(id){var el=document.getElementById(id);return el?el.value:'';}
+
+function submitFac(){
+  var entry={año:+gv('d-año'),mes:+gv('d-mes'),cliente:gv('d-cli'),item:gv('d-item'),importe:parseFloat(gv('d-imp'))||0};
+  if(!entry.cliente||!entry.importe){alert('Cliente e importe son obligatorios');return;}
+  NEW_FAC.push(entry);saveNewEntries();closeDrawer();bFac();bRes();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+function submitGas(){
+  var entry={año:+gv('d-año'),mes:+gv('d-mes'),concepto:gv('d-cat'),item:gv('d-item'),importe:parseFloat(gv('d-imp'))||0};
+  if(!entry.importe){alert('El importe es obligatorio');return;}
+  NEW_GAS.push(entry);saveNewEntries();closeDrawer();bGas();bRes();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+function submitCit(){
+  var d=gv('d-fecha'),f=d?new Date(d):new Date();
+  var entry={cliente:gv('d-cli'),tipo:gv('d-tipo'),fecha:d,mes:f.getMonth()+1,año:f.getFullYear(),persona:gv('d-pers'),comentario:gv('d-com')};
+  if(!entry.cliente){alert('El cliente es obligatorio');return;}
+  NEW_CITAS.push(entry);saveNewEntries();closeDrawer();bCit();bRes();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+function submitLed(){
+  var entry={nombre:gv('d-nom'),fuente:gv('d-fuen'),asignado:gv('d-asig'),fase:gv('d-fase'),valor:parseFloat(gv('d-val'))||0,fecha:new Date().toISOString().slice(0,10),mes:new Date().getMonth()+1,año:new Date().getFullYear()};
+  if(!entry.nombre){alert('El nombre es obligatorio');return;}
+  NEW_LEADS.push(entry);saveNewEntries();closeDrawer();bLed();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+function submitCli(){
+  var entry={nombre:gv('d-nom'),plan:gv('d-plan'),estado:gv('d-est'),fecha_inicio:gv('d-fecha')};
+  if(!entry.nombre){alert('El nombre es obligatorio');return;}
+  NEW_CLI.push(entry);saveNewEntries();closeDrawer();bCli();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+
+/* ── SECCIÓN RESUMEN ── */
+function bRes(){
+  var fAll=FAC_DATA.concat(NEW_FAC),gNom=GAS_NOM.concat(NEW_GAS),gAds=GAS_ADS;
+  var fY=byYear(fAll),gNY=byYear(gNom),gAY=byYear(gAds);
+  var tf=S(fY.map(function(e){return e.importe;}));
+  var tgN=S(gNY.map(function(e){return e.importe;}));
+  var tgA=S(gAY.map(function(e){return e.importe;}));
+  var tg=tgN+tgA,tn=tf-tg;
+  var citY=CITAS_DATA.concat(NEW_CITAS).filter(function(c){return +c.año===YEAR;});
+  var ledY=LEADS_DATA.concat(NEW_LEADS).filter(function(l){return +l.año===YEAR;});
+  var cliAct=CLI_DATA.concat(NEW_CLI).filter(function(c){return c.estado==='Activo'||c.plan!=='Inactivo';});
+  document.getElementById('k-res').innerHTML=kpi([
+    {l:'Facturación '+YEAR,v:fe(tf),s:'Total ingresos del año',c1:PU,c2:MG},
+    {l:'Gastos '+YEAR,v:fe(tg),s:'Nómina + Plataformas + Ads',c1:MG,c2:'#9333ea'},
+    {l:'Neto '+YEAR,v:fe(tn),s:'Margen: '+(tf?Math.round(tn/tf*100):0)+'%',c1:GN,c2:PU,col:tn>=0?GN:RD},
+    {l:'Clientes Activos',v:cliAct.length,s:citY.length+' citas · '+ledY.length+' leads',c1:AM,c2:MG}
   ]);
+  var fMes=[0,0,0,0,0,0,0,0,0,0,0,0],gMes=[0,0,0,0,0,0,0,0,0,0,0,0];
+  fY.forEach(function(e){if(e.mes>=1&&e.mes<=12)fMes[e.mes-1]+=e.importe;});
+  gNY.concat(gAY).forEach(function(e){if(e.mes>=1&&e.mes<=12)gMes[e.mes-1]+=e.importe;});
+  var nMes=fMes.map(function(v,i){return v-gMes[i];});
+  mk('c-r-ig',{type:'bar',data:{labels:MESES,datasets:[{label:'Ingresos',data:fMes,backgroundColor:'rgba(60,43,134,.72)',borderColor:PU,borderWidth:1.5,borderRadius:4},{label:'Gastos',data:gMes,backgroundColor:'rgba(230,25,120,.5)',borderColor:MG,borderWidth:1.5,borderRadius:4}]},options:co({yf:function(v){return ff(v);}})});
+  mk('c-r-nt',{type:'bar',data:{labels:MESES,datasets:[{label:'Neto',data:nMes,backgroundColor:nMes.map(function(v){return v>=0?'rgba(34,211,165,.65)':'rgba(240,90,126,.65)';}),borderColor:nMes.map(function(v){return v>=0?GN:RD;}),borderWidth:1.5,borderRadius:4}]},options:co({yf:function(v){return ff(v);}})});
+  var byCli=sortDesc(groupSum(fY,'cliente','importe')).slice(0,8);
+  mk('c-r-cl',{type:'bar',data:{labels:byCli.map(function(e){return e[0];}),datasets:[{label:'€',data:byCli.map(function(e){return e[1];}),backgroundColor:byCli.map(function(_,i){return 'hsla('+(260-i*11)+',60%,'+(56+i*3)+'%,.75)';}),borderRadius:4}]},options:co({ii:'y',xf:function(v){return ff(v);}})});
+  var carla=[0,0,0,0,0,0,0,0,0,0,0,0],sheila=[0,0,0,0,0,0,0,0,0,0,0,0];
+  citY.forEach(function(c){if(c.mes>=1&&c.mes<=12){if(c.persona==='Carla')carla[c.mes-1]++;else if(c.persona==='Sheila')sheila[c.mes-1]++;}});
+  mk('c-r-ct',{type:'bar',data:{labels:MESES,datasets:[{label:'Carla',data:carla,backgroundColor:'rgba(230,25,120,.72)',borderRadius:3},{label:'Sheila',data:sheila,backgroundColor:'rgba(60,43,134,.72)',borderRadius:3}]},options:co({s:true})});
+}
 
-  mk('c-ig', {type:'bar', data:{labels:d.m, datasets:[
-    {label:'Ingresos', data:f, backgroundColor:'rgba(60,43,134,.72)', borderColor:PU, borderWidth:1.5, borderRadius:5},
-    {label:'Gastos',   data:g, backgroundColor:'rgba(230,25,120,.5)',  borderColor:MG, borderWidth:1.5, borderRadius:5}
-  ]}, options:co({yf:function(v){return ff(v);}})});
-
-  var na = f.map(function(v,i){ return v - g[i]; });
-  mk('c-nt', {type:'bar', data:{labels:d.m, datasets:[{
-    label:'Neto', data:na,
-    backgroundColor: na.map(function(v){ return v>=0?'rgba(34,211,165,.65)':'rgba(240,90,126,.65)'; }),
-    borderColor:     na.map(function(v){ return v>=0?GN:RD; }),
-    borderWidth:1.5, borderRadius:5
-  }]}, options:co({yf:function(v){return ff(v);}})});
-
-  mk('c-cl', {type:'bar', data:{labels:d.tc.map(function(c){return c[0];}), datasets:[{
-    label:'Facturado', data:d.tc.map(function(c){return c[1];}),
-    backgroundColor: d.tc.map(function(_,i){ return 'hsla('+(260-i*11)+',60%,'+(56+i*3)+'%,.75)'; }),
-    borderRadius:5
-  }]}, options:co({ii:'y', xf:function(v){return ff(v);}})});
-
-  var desHTML = [{l:'Sueldos y freelancers',val:ts,c:PU},{l:'Plataformas y suscripciones',val:tp,c:MG},{l:'Publicidad (Ads)',val:ta,c:AM},{l:'Otros gastos',val:tot2,c:'#9333ea'}]
-    .map(function(it){
-      var pct = tg ? Math.round(it.val/tg*100) : 0;
-      return '<div class="pr"><div class="pr-h"><span>'+it.l+'</span><span>'+fe(it.val)+'</span></div>'
-        +'<div class="pr-t"><div class="pr-f" style="width:'+pct+'%;background:'+it.c+'"></div></div></div>';
-    }).join('');
-  var mgPct = tf ? Math.round(tg/tf*100) : 0;
-  document.getElementById('g-des').innerHTML = desHTML
-    + '<div style="font-size:12px;color:var(--tm);border-top:1px solid var(--bd);padding-top:10px;margin-top:4px">'
-    + '<div style="display:flex;justify-content:space-between;padding:5px 0"><span>Total gastos</span><span class="mn" style="color:var(--tx)">'+fe(tg)+'</span></div>'
-    + '<div style="display:flex;justify-content:space-between;padding:5px 0"><span>% sobre ingresos</span><span class="mn '+(mgPct>94?'trd':'tgn')+'">'+mgPct+'%</span></div></div>';
-
-  document.getElementById('t-fin').innerHTML = d.m.map(function(m,i) {
-    if (f[i]===0 && g[i]===0) return '';
-    var n=f[i]-g[i], mg=f[i]?Math.round(n/f[i]*100):0;
-    return '<tr><td>'+m+'</td><td class="mn tgn">'+fe(f[i])+'</td><td class="mn">'+fe(s[i])+'</td>'
-      +'<td class="mn">'+fe(p[i])+'</td><td class="mn">'+fe(a[i])+'</td>'
-      +'<td class="mn">'+(ot[i]?fe(ot[i]):'—')+'</td>'
-      +'<td class="mn trd">'+fe(g[i])+'</td>'
-      +'<td class="mn '+(n>=0?'tgn':'trd')+'">'+fe(n)+'</td>'
-      +'<td><span class="bdg '+(mg>=15?'bgn':mg>=0?'bam':'brd')+'">'+mg+'%</span></td></tr>';
+/* ── FACTURACIÓN ── */
+function bFac(){
+  var all=byYear(FAC_DATA.concat(NEW_FAC));
+  var tf=S(all.map(function(e){return e.importe;}));
+  var byCli=sortDesc(groupSum(all,'cliente','importe'));
+  var top1=byCli[0]?byCli[0][0]:'—';
+  var mc=all.filter(function(e){return e.mes>0;}).length>0?Array.from(new Set(all.map(function(e){return e.mes;}))).length:1;
+  document.getElementById('k-fac').innerHTML=kpi([
+    {l:'Facturación Total',v:fe(tf),s:'Año '+YEAR,c1:PU,c2:MG},
+    {l:'Top Cliente',v:top1.length>15?top1.substring(0,15)+'…':top1,s:byCli[0]?fe(byCli[0][1]):'—',c1:MG,c2:'#9333ea'},
+    {l:'Promedio Mensual',v:fe(mc?tf/mc:0),s:'Meses con facturación',c1:GN,c2:PU},
+    {l:'Registros',v:all.length,s:'Entradas de facturación',c1:AM,c2:MG}
+  ]);
+  var top10=byCli.slice(0,10);
+  mk('c-f-cl',{type:'bar',data:{labels:top10.map(function(e){return e[0];}),datasets:[{label:'€',data:top10.map(function(e){return e[1];}),backgroundColor:top10.map(function(_,i){return 'hsla('+(260-i*11)+',60%,'+(56+i*3)+'%,.75)';}),borderRadius:4}]},options:co({ii:'y',xf:function(v){return ff(v);}})});
+  var mes=[0,0,0,0,0,0,0,0,0,0,0,0];
+  all.forEach(function(e){if(e.mes>=1&&e.mes<=12)mes[e.mes-1]+=e.importe;});
+  mk('c-f-mo',{type:'line',data:{labels:MESES,datasets:[{label:'Facturación',data:mes,borderColor:MG,backgroundColor:'rgba(230,25,120,.1)',fill:true,tension:.35,pointBackgroundColor:MG,pointRadius:4}]},options:co({yf:function(v){return ff(v);}})});
+  var sorted=all.slice().sort(function(a,b){return b.mes-a.mes;});
+  document.getElementById('t-fac').innerHTML=sorted.map(function(e){
+    return '<tr><td>'+(MESES[e.mes-1]||'—')+' '+e.año+'</td><td>'+e.cliente+'</td><td style="color:var(--tm)">'+e.item+'</td><td class="mn tgn">'+fe(e.importe)+'</td></tr>';
   }).join('');
 }
 
-/* ═══ COMERCIAL ═══ */
-function bCom() {
-  var d = D();
-  var tC=S(d.ct), tD=S(d.cd), tR=S(d.cr), tL=S(d.ld), tA=S(d.ad);
-  var cpl = tL ? Math.round(tA/tL) : 0;
-  var tCarla=S(d.carla), tSheila=S(d.sheila);
-
-  document.getElementById('k-com').innerHTML = kpiHtml([
-    {l:'Total Citas',       v:tC, s:'Carla: '+tCarla+' · Sheila: '+tSheila, c1:PU, c2:MG},
-    {l:'Citas Demo',        v:tD, s:'Con prospectos nuevos', c1:MG, c2:'#9333ea'},
-    {l:'Citas Recurrentes', v:tR, s:'Con clientes activos',  c1:GN, c2:PU},
-    {l:'Leads Meta Ads',    v:tL, s:cpl?'CPL: €'+cpl:'Sin campaña activa', c1:AM, c2:MG}
+/* ── GASTOS ── */
+function bGas(){
+  var nomY=byYear(GAS_NOM.concat(NEW_GAS)),adsY=byYear(GAS_ADS);
+  var all=nomY.concat(adsY);
+  var cats={'Sueldos y freelancers':0,'Plataformas y suscripciones':0,'Publicidad Ads':0,'Otros':0};
+  nomY.forEach(function(e){var c=e.concepto||'Otros';cats[c]=(cats[c]||0)+e.importe;});
+  adsY.forEach(function(e){cats['Publicidad Ads']=(cats['Publicidad Ads']||0)+e.importe;});
+  var newGasY=NEW_GAS.filter(function(e){return +e.año===YEAR;});
+  newGasY.forEach(function(e){var c=e.concepto||'Otros';cats[c]=(cats[c]||0)+e.importe;});
+  var tg=Object.values(cats).reduce(function(a,b){return a+b;},0);
+  document.getElementById('k-gas').innerHTML=kpi([
+    {l:'Sueldos y freelancers',v:fe(cats['Sueldos y freelancers']),s:Math.round(cats['Sueldos y freelancers']/tg*100||0)+'% del total',c1:PU,c2:MG},
+    {l:'Plataformas',v:fe(cats['Plataformas y suscripciones']),s:Math.round(cats['Plataformas y suscripciones']/tg*100||0)+'% del total',c1:MG,c2:'#9333ea'},
+    {l:'Publicidad Ads',v:fe(cats['Publicidad Ads']),s:Math.round(cats['Publicidad Ads']/tg*100||0)+'% del total',c1:AM,c2:MG},
+    {l:'Total Gastos',v:fe(tg),s:'Año '+YEAR,c1:GN,c2:PU}
   ]);
-
-  mk('c-cs', {type:'bar', data:{labels:d.m, datasets:[
-    {label:'Carla',  data:d.carla,  backgroundColor:'rgba(230,25,120,.72)', borderRadius:4},
-    {label:'Sheila', data:d.sheila, backgroundColor:'rgba(60,43,134,.72)',  borderRadius:4}
-  ]}, options:co({s:true})});
-
-  var fT = Object.values(d.fl).reduce(function(a,b){return a+b;},0);
-  var fC = [MG,PU,AM,GN,'#9333ea','#22d3a5',RD];
-  document.getElementById('l-fun').innerHTML = Object.entries(d.fl).map(function(entry,i){
-    var n=entry[1], pct=Math.round(n/fT*100), w=Math.max(12,pct)+'%';
-    return '<div class="fn" style="--fw:'+w+';--fc:'+fC[i]+'25">'
-      +'<div class="fn-l"><span style="color:'+fC[i]+';font-size:7px">●</span>'+entry[0]+'</div>'
-      +'<div class="fn-n" style="color:'+fC[i]+'">'+n+'<span class="fn-p">'+pct+'%</span></div></div>';
+  var cNom=[0,0,0,0,0,0,0,0,0,0,0,0],cPlt=[0,0,0,0,0,0,0,0,0,0,0,0],cAds=[0,0,0,0,0,0,0,0,0,0,0,0],cOt=[0,0,0,0,0,0,0,0,0,0,0,0];
+  nomY.forEach(function(e){if(e.mes<1||e.mes>12)return;var c=e.concepto||'Otros';if(c.indexOf('Sueld')>=0)cNom[e.mes-1]+=e.importe;else if(c.indexOf('Plat')>=0)cPlt[e.mes-1]+=e.importe;else cOt[e.mes-1]+=e.importe;});
+  adsY.forEach(function(e){if(e.mes>=1&&e.mes<=12)cAds[e.mes-1]+=e.importe;});
+  mk('c-g-mo',{type:'bar',data:{labels:MESES,datasets:[{label:'Sueldos',data:cNom,backgroundColor:'rgba(60,43,134,.75)',borderRadius:3},{label:'Plataformas',data:cPlt,backgroundColor:'rgba(230,25,120,.65)',borderRadius:3},{label:'Ads',data:cAds,backgroundColor:'rgba(245,158,11,.7)',borderRadius:3},{label:'Otros',data:cOt,backgroundColor:'rgba(90,82,128,.5)',borderRadius:3}]},options:co({s:true,yf:function(v){return ff(v);}})});
+  mk('c-g-do',{type:'doughnut',data:{labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:[PU,MG,AM,'#9333ea'],borderWidth:0,hoverOffset:5}]},options:{cutout:'62%',maintainAspectRatio:false,responsive:true,plugins:{legend:{position:'right',labels:{padding:10,boxWidth:9,font:{size:10}}},tooltip:{backgroundColor:'rgba(10,8,28,.96)'}}}});
+  document.getElementById('t-gas').innerHTML=all.slice().sort(function(a,b){return b.mes-a.mes;}).map(function(e){
+    return '<tr><td>'+(MESES[e.mes-1]||'—')+' '+e.año+'</td><td>'+(e.concepto||e.item||'—')+'</td><td class="mn trd">'+fe(e.importe)+'</td></tr>';
   }).join('');
-
-  mk('c-ld', {type:'bar', data:{labels:d.m, datasets:[{label:'Leads',data:d.ld,backgroundColor:'rgba(230,25,120,.65)',borderRadius:5}]}, options:co()});
-  mk('c-ad', {type:'line', data:{labels:d.m, datasets:[{label:'Inversión Ads',data:d.ad,borderColor:AM,backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.35,pointBackgroundColor:AM,pointRadius:4}]}, options:co({yf:function(v){return '€'+v;}})});
-  mk('c-ct', {type:'bar', data:{labels:d.m, datasets:[
-    {label:'Demo',       data:d.cd, backgroundColor:'rgba(230,25,120,.72)', borderRadius:4},
-    {label:'Recurrente', data:d.cr, backgroundColor:'rgba(60,43,134,.72)',  borderRadius:4},
-    {label:'Otras',      data:d.ct.map(function(v,i){return Math.max(0,v-d.cd[i]-d.cr[i]);}), backgroundColor:'rgba(90,82,128,.4)', borderRadius:4}
-  ]}, options:co({s:true})});
 }
 
-/* ═══ CLIENTES ═══ */
-function bCli() {
-  var d = D();
-  var act=d.cl.filter(function(c){return c[3]==='Activo';}).length;
-  var inf=d.cl.filter(function(c){return c[1]==='Infinity Expande';}).length;
-  var crm=d.cl.filter(function(c){return c[1]==='CRM LTN';}).length;
-  var totF=S(d.cl.map(function(c){return c[2];}));
-
-  document.getElementById('k-cli').innerHTML = kpiHtml([
-    {l:'Clientes Activos',  v:act,      s:'Con plan vigente',        c1:MG, c2:PU, col:MG},
-    {l:'Infinity Expande',  v:inf,      s:'Plan completo',           c1:PU, c2:MG, col:PU},
-    {l:'CRM LTN',           v:crm,      s:'Plan CRM',                c1:GN, c2:PU, col:GN},
-    {l:'Facturación Total', v:fe(totF), s:'Suma todos los clientes', c1:AM, c2:MG}
+/* ── CITAS ── */
+function bCit(){
+  var all=CITAS_DATA.concat(NEW_CITAS).filter(function(c){return +c.año===YEAR;});
+  var demo=all.filter(function(c){return c.tipo==='Demo';}).length;
+  var rec=all.filter(function(c){return c.tipo==='Recurrente';}).length;
+  var carla=all.filter(function(c){return c.persona==='Carla';}).length;
+  var sheila=all.filter(function(c){return c.persona==='Sheila';}).length;
+  document.getElementById('k-cit').innerHTML=kpi([
+    {l:'Total Citas',v:all.length,s:'Año '+YEAR,c1:PU,c2:MG},
+    {l:'Demo',v:demo,s:'Con prospectos',c1:MG,c2:'#9333ea'},
+    {l:'Recurrentes',v:rec,s:'Con clientes activos',c1:GN,c2:PU},
+    {l:'Carla / Sheila',v:carla+' / '+sheila,s:'Por responsable',c1:AM,c2:MG}
   ]);
-
-  document.getElementById('t-cli').innerHTML = d.cl.map(function(c){
-    var pc=c[1]==='Infinity Expande'?'bmg':c[1]==='CRM LTN'?'bpu':c[1]==='CRM gratuito'?'bgr':'brd';
-    var ec=c[3]==='Activo'?'bgn':c[3]==='Gratuito'?'bam':'brd';
-    return '<tr><td style="font-size:11.5px">'+c[0]+'</td>'
-      +'<td><span class="bdg '+pc+'">'+c[1]+'</span></td>'
-      +'<td class="mn '+(c[2]>0?'tgn':'')+'">'+( c[2]>0?fe(c[2]):'—' )+'</td>'
-      +'<td><span class="bdg '+ec+'">'+c[3]+'</span></td></tr>';
+  var cCarla=[0,0,0,0,0,0,0,0,0,0,0,0],cSheila=[0,0,0,0,0,0,0,0,0,0,0,0];
+  all.forEach(function(c){if(c.mes>=1&&c.mes<=12){if(c.persona==='Carla')cCarla[c.mes-1]++;else if(c.persona==='Sheila')cSheila[c.mes-1]++;}});
+  mk('c-c-cs',{type:'bar',data:{labels:MESES,datasets:[{label:'Carla',data:cCarla,backgroundColor:'rgba(230,25,120,.72)',borderRadius:3},{label:'Sheila',data:cSheila,backgroundColor:'rgba(60,43,134,.72)',borderRadius:3}]},options:co({s:true})});
+  var byTipo={};
+  all.forEach(function(c){byTipo[c.tipo]=(byTipo[c.tipo]||0)+1;});
+  mk('c-c-ti',{type:'doughnut',data:{labels:Object.keys(byTipo),datasets:[{data:Object.values(byTipo),backgroundColor:[MG,PU,AM,GN,RD,'#9333ea'],borderWidth:0,hoverOffset:5}]},options:{cutout:'62%',maintainAspectRatio:false,responsive:true,plugins:{legend:{position:'right',labels:{padding:10,boxWidth:9,font:{size:10}}},tooltip:{backgroundColor:'rgba(10,8,28,.96)'}}}});
+  var recent=all.slice().sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);}).slice(0,30);
+  document.getElementById('t-cit').innerHTML=recent.map(function(c){
+    var tc=c.tipo==='Demo'?'bmg':c.tipo==='Recurrente'?'bpu':c.tipo==='Estratégica'?'bgn':'bgr';
+    return '<tr><td>'+c.fecha+'</td><td>'+c.cliente+'</td><td><span class="bdg '+tc+'">'+c.tipo+'</span></td><td>'+c.persona+'</td><td style="font-size:10.5px;color:var(--tf)">'+c.comentario.substring(0,40)+'</td></tr>';
   }).join('');
+}
 
-  var mx = d.cc[0] ? d.cc[0][1] : 1;
-  document.getElementById('cit-cli').innerHTML = d.cc.map(function(e){ return prog(e[0],e[1]+' citas',mx,''); }).join('');
+/* ── LEADS ── */
+function bLed(){
+  var all=LEADS_DATA.concat(NEW_LEADS);
+  var allY=all.filter(function(l){return +l.año===YEAR;});
+  var pipeline=allY.filter(function(l){return l.fase!=='Cliente perdido'&&l.fase!=='Cliente';}).length;
+  var demos=allY.filter(function(l){return l.fase==='Agendó Demo'||l.fase==='Recibió presupuesto'||l.fase==='Recibió llamada'||l.fase==='Video de reseña';}).length;
+  var valor=S(allY.map(function(l){return l.valor||0;}));
+  document.getElementById('k-led').innerHTML=kpi([
+    {l:'Total Leads',v:all.length,s:'Histórico completo',c1:PU,c2:MG},
+    {l:'Año '+YEAR,v:allY.length,s:'Captados en el período',c1:MG,c2:'#9333ea'},
+    {l:'En Pipeline',v:pipeline,s:'Sin cerrar/perder',c1:AM,c2:MG},
+    {l:'Valor Potencial',v:fe(valor),s:'Suma valor leads '+YEAR,c1:GN,c2:PU}
+  ]);
+  var mes=[0,0,0,0,0,0,0,0,0,0,0,0];
+  allY.forEach(function(l){if(l.mes>=1&&l.mes<=12)mes[l.mes-1]++;});
+  mk('c-l-mo',{type:'bar',data:{labels:MESES,datasets:[{label:'Leads',data:mes,backgroundColor:'rgba(230,25,120,.65)',borderRadius:4}]},options:co()});
+  var fases={};
+  all.forEach(function(l){fases[l.fase]=(fases[l.fase]||0)+1;});
+  var fT=all.length||1;
+  var fC=[MG,PU,AM,GN,'#9333ea','#22d3a5',RD,'#5a5280'];
+  document.getElementById('l-fun').innerHTML=sortDesc(fases).map(function(e,i){
+    var pct=Math.round(e[1]/fT*100),w=Math.max(10,pct)+'%';
+    return '<div class="fn" style="--fw:'+w+';--fc:'+fC[i%fC.length]+'25"><div class="fn-l"><span style="color:'+fC[i%fC.length]+';font-size:7px">●</span>'+e[0]+'</div><div class="fn-n" style="color:'+fC[i%fC.length]+'">'+e[1]+'<span class="fn-p">'+pct+'%</span></div></div>';
+  }).join('');
+  var recent=all.slice().sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);}).slice(0,25);
+  document.getElementById('t-led').innerHTML=recent.map(function(l){
+    var fc=l.fase==='Agendó Demo'?'bgn':l.fase==='Bienvenida'?'bpu':l.fase==='Cliente perdido'?'brd':'bam';
+    return '<tr><td>'+(l.fecha||'—')+'</td><td>'+l.nombre+'</td><td><span class="bdg '+fc+'">'+l.fase+'</span></td><td>'+l.fuente+'</td><td>'+(l.asignado||'—')+'</td><td class="mn">'+(l.valor?fe(l.valor):'—')+'</td></tr>';
+  }).join('');
+}
 
-  if (d.q4 && d.q4.length) {
-    document.getElementById('q4-cli').innerHTML = d.q4.map(function(r){
-      var pc=r[1]==='Infinity Expande'?'bmg':'bpu';
-      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
-        +'<span style="font-size:12px;font-weight:500">'+r[0]+'</span>'
-        +'<div style="display:flex;gap:6px;align-items:center"><span class="bdg '+pc+'">'+r[1]+'</span>'
-        +'<span style="font-size:10.5px;color:var(--tm)">'+r[2]+'</span></div></div>';
+/* ── CLIENTES ── */
+function bCli(){
+  var all=CLI_DATA.concat(NEW_CLI);
+  var act=all.filter(function(c){return c.estado==='Activo'||(c.plan&&c.plan!=='Inactivo'&&c.plan!=='CRM gratuito');}).length;
+  var inf=all.filter(function(c){return c.plan==='Infinity Expande';}).length;
+  var crm=all.filter(function(c){return c.plan==='CRM LTN';}).length;
+  var grat=all.filter(function(c){return c.plan==='CRM gratuito';}).length;
+  document.getElementById('k-cli').innerHTML=kpi([
+    {l:'Total Clientes',v:all.length,s:'En cartera',c1:PU,c2:MG},
+    {l:'Infinity Expande',v:inf,s:'Plan completo',c1:MG,c2:'#9333ea',col:MG},
+    {l:'CRM LTN',v:crm,s:'Plan CRM',c1:GN,c2:PU,col:GN},
+    {l:'Gratuitos / Inactivos',v:grat+(all.length-act-inf-crm<0?0:all.length-act-inf-crm),s:'Sin plan de pago',c1:AM,c2:MG}
+  ]);
+  document.getElementById('t-cli').innerHTML=all.map(function(c){
+    var pc=c.plan==='Infinity Expande'?'bmg':c.plan==='CRM LTN'?'bpu':c.plan==='CRM gratuito'?'bgr':'brd';
+    var ec=c.estado==='Activo'||c.plan==='Infinity Expande'||c.plan==='CRM LTN'?'bgn':c.plan==='CRM gratuito'?'bam':'brd';
+    var est=c.plan==='Inactivo'?'Inactivo':c.plan==='CRM gratuito'?'Gratuito':'Activo';
+    return '<tr><td>'+c.nombre+'</td><td><span class="bdg '+pc+'">'+c.plan+'</span></td><td><span class="bdg '+ec+'">'+est+'</span></td><td style="color:var(--tf);font-size:11px">'+(c.fecha_inicio||'—')+'</td></tr>';
+  }).join('');
+  var planes={};
+  all.forEach(function(c){planes[c.plan]=(planes[c.plan]||0)+1;});
+  mk('c-cli-pl',{type:'doughnut',data:{labels:Object.keys(planes),datasets:[{data:Object.values(planes),backgroundColor:[MG,PU,GN,AM,RD],borderWidth:0,hoverOffset:5}]},options:{cutout:'60%',maintainAspectRatio:false,responsive:true,plugins:{legend:{position:'right',labels:{padding:12,boxWidth:10,font:{size:10}}},tooltip:{backgroundColor:'rgba(10,8,28,.96)'}}}});
+}
+
+/* ── TAREAS ── */
+function bTar(){
+  var hist=TAR_DATA;
+  var live=TT_ENTRIES;
+  var all=live.length>0?live:hist;
+  var isLive=live.length>0;
+  var est={};
+  all.forEach(function(t){var s=t.status||t.estado||'—';est[s]=(est[s]||0)+1;});
+  var tot=all.length;
+  var enCurso=est['Proceso']||est['En curso']||0;
+  var realizadas=est['Realizado']||est['Completada']||0;
+  var horas=isLive?S(live.map(function(t){return parseFloat(t.hours||t.horas||0);})):0;
+  document.getElementById('k-tar').innerHTML=kpi([
+    {l:'Total Tareas',v:tot,s:isLive?'Desde time tracker':'Desde Excel',c1:PU,c2:MG},
+    {l:isLive?'Realizadas':'Completadas',v:realizadas,s:Math.round(realizadas/tot*100||0)+'% del total',c1:GN,c2:PU,col:GN},
+    {l:'En Curso',v:enCurso,s:'Activas ahora',c1:AM,c2:MG,col:AM},
+    {l:isLive?'Horas Totales':'Automatizaciones',v:isLive?(Math.round(horas)+'h'):220,s:isLive?'Registradas en tracker':'Creadas por el equipo',c1:MG,c2:'#9333ea',col:MG}
+  ]);
+  mk('c-t-st',{type:'doughnut',data:{labels:Object.keys(est),datasets:[{data:Object.values(est),backgroundColor:[GN,AM,RD,'#9333ea',PU,'#5a5280','#f59e0b'],borderWidth:0,hoverOffset:5}]},options:{cutout:'65%',maintainAspectRatio:false,responsive:true,plugins:{legend:{position:'right',labels:{padding:10,boxWidth:9,font:{size:10}}},tooltip:{backgroundColor:'rgba(10,8,28,.96)',callbacks:{label:function(c){return c.label+': '+c.raw+' ('+Math.round(c.raw/tot*100)+'%)';}}}}}});
+  if(isLive){
+    var hResp={};
+    live.forEach(function(t){var r=t.responsable||'Sin asignar',h=parseFloat(t.hours||t.horas||0);hResp[r]=(hResp[r]||0)+h;});
+    var rArr=sortDesc(hResp);var maxR=rArr[0]?rArr[0][1]:1;
+    document.getElementById('t-resp').innerHTML=rArr.map(function(r){return prog(r[0],Math.round(r[1])+'h',maxR,'');}).join('');
+    var hCli={};
+    live.forEach(function(t){var c=t.cliente||'Sin cliente',h=parseFloat(t.hours||t.horas||0);hCli[c]=(hCli[c]||0)+h;});
+    var cArr=sortDesc(hCli).slice(0,8);var maxC=cArr[0]?cArr[0][1]:1;
+    document.getElementById('t-tcli').innerHTML=cArr.map(function(c){return prog(c[0],Math.round(c[1])+'h',maxC,PU);}).join('');
+    var recent=live.slice().sort(function(a,b){return new Date(b.date||b.fecha||0)-new Date(a.date||a.fecha||0);}).slice(0,10);
+    var stCls={Pendiente:'bpu',Proceso:'bam',Realizado:'bgn',Pausado:'brd'};
+    document.getElementById('t-live').innerHTML=recent.map(function(t){
+      var st=t.status||t.estado||'Pendiente';
+      return '<tr><td style="font-size:10.5px">'+(t.task||t.tarea||'—').substring(0,35)+'</td><td>'+(t.cliente||'—')+'</td><td>'+(t.responsable||'—')+'</td><td><span class="bdg '+(stCls[st]||'bgr')+'">'+st+'</span></td><td class="mn">'+(t.hours||t.horas||0)+'h</td></tr>';
     }).join('');
   } else {
-    document.getElementById('q4-cli').innerHTML='<span style="font-size:12px;color:var(--tf)">Sin altas nuevas en este período</span>';
+    var rArr2=hist.reduce(function(acc,t){var r=t.responsable||'Sin asignar';acc[r]=(acc[r]||0)+1;return acc;},{});
+    var ra=sortDesc(rArr2);var mr=ra[0]?ra[0][1]:1;
+    document.getElementById('t-resp').innerHTML=ra.map(function(r){return prog(r[0],r[1]+' tareas',mr,'');}).join('');
+    var cArr2=hist.reduce(function(acc,t){var c=t.cliente||'—';acc[c]=(acc[c]||0)+1;return acc;},{});
+    var ca=sortDesc(cArr2).slice(0,8);var mc=ca[0]?ca[0][1]:1;
+    document.getElementById('t-tcli').innerHTML=ca.map(function(c){return prog(c[0],c[1]+' tareas',mc,PU);}).join('');
+    document.getElementById('t-live').innerHTML=hist.slice(0,10).map(function(t){
+      var ec=t.estado==='Completada'?'bgn':t.estado==='En curso'?'bam':t.estado==='No iniciada'?'bpu':'brd';
+      return '<tr><td style="font-size:10.5px">'+(t.tarea||'—').substring(0,35)+'</td><td>'+(t.cliente||'—').substring(0,15)+'</td><td>'+(t.responsable||'—')+'</td><td><span class="bdg '+ec+'">'+t.estado+'</span></td><td class="mn">—</td></tr>';
+    }).join('');
   }
 }
 
-/* ═══ TAREAS ═══ */
-function bTar() {
-  var d = D();
-  var est=d.et, tot=Object.values(est).reduce(function(a,b){return a+b;},0);
-
-  document.getElementById('k-tar').innerHTML = kpiHtml([
-    {l:'Total Tareas',    v:tot,              s:'Historial completo',                                c1:PU, c2:MG},
-    {l:'Completadas',     v:est['Completada'], s:Math.round(est['Completada']/tot*100)+'% del total', c1:GN, c2:PU, col:GN},
-    {l:'En Curso',        v:est['En curso'],   s:'Activas ahora',                                     c1:AM, c2:MG, col:AM},
-    {l:'Automatizaciones',v:220,               s:'Total creadas (Matias + Ele)',                       c1:MG, c2:'#9333ea', col:MG}
-  ]);
-
-  mk('c-tr', {type:'doughnut', data:{
-    labels:Object.keys(est),
-    datasets:[{data:Object.values(est),backgroundColor:[GN,AM,RD,'#9333ea',PU,'#5a5280'],borderWidth:0,hoverOffset:6}]
-  }, options:{cutout:'65%',maintainAspectRatio:false,responsive:true,plugins:{
-    legend:{position:'right',labels:{padding:12,boxWidth:10,font:{size:11}}},
-    tooltip:{backgroundColor:'rgba(10,8,28,.96)',callbacks:{label:function(c){return c.label+': '+c.raw+' ('+Math.round(c.raw/tot*100)+'%)';}}}
-  }}});
-
-  var mr=d.resp[0][1];
-  document.getElementById('t-resp').innerHTML = d.resp.map(function(r){ return prog(r[0],r[1]+' tareas',mr,''); }).join('');
-  document.getElementById('t-auto').innerHTML = d.auto_resp.map(function(r){ return prog(r[0],r[1]+' autom.',d.auto_resp[0][1]||1,MG); }).join('');
-  var mc=d.tar_cli[0][1];
-  document.getElementById('t-cli-tar').innerHTML = d.tar_cli.map(function(r){ return prog(r[0],r[1]+' tareas',mc,PU); }).join('');
-}
-
-/* ═══════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════ */
-Chart.defaults.color = '#8b80b8';
-Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
-Chart.defaults.font.size = 11;
-document.getElementById('todayDate').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-setSyncStatus('spin','Cargando...');
+/* ── INIT ── */
+Chart.defaults.color='#8b80b8';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=10;
+document.getElementById('todayDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('addBtn').style.display='none';
 initData();
+
 </script>
 </body>
 </html>

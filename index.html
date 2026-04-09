@@ -432,9 +432,9 @@ function lS(id,el){
   document.querySelectorAll('.nav-a').forEach(function(a){a.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
   CUR_SEC=id;
-  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea',str:'—'};
+  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea',str:'pago manual'};
   document.getElementById('addLabel').textContent=labels[id]||'entrada';
-  document.getElementById('addBtn').style.display=id==='tar'||id==='res'||id==='str'?'none':'flex';
+  document.getElementById('addBtn').style.display=id==='tar'||id==='res'?'none':'flex';
   setTimeout(function(){if(id==='res')bRes();else if(id==='fac')bFac();else if(id==='gas')bGas();else if(id==='cit')bCit();else if(id==='led')bLed();else if(id==='cli')bCli();else bTar();},40);
 }
 function bAll(){bRes();bFac();bGas();bCit();bLed();bCli();bTar();bStr();}
@@ -445,10 +445,11 @@ var FORMS={
   gas:'<div class="fr"><div class="fg"><label class="fl">Año</label><select class="fi" id="d-año"><option>2024</option><option selected>2025</option><option>2026</option><option>2027</option></select></div><div class="fg"><label class="fl">Mes</label><select class="fi" id="d-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div></div><div class="fg"><label class="fl">Categoría</label><select class="fi" id="d-cat"><option>Sueldos y freelancers</option><option>Plataformas y suscripciones</option><option>Publicidad Ads</option><option>Otros</option></select></div><div class="fg"><label class="fl">Concepto (opcional)</label><input class="fi" id="d-item" placeholder="Ej: Meta Ads julio"></div><div class="fg"><label class="fl">Importe (€)</label><input type="number" class="fi" id="d-imp" placeholder="0.00" step="0.01"></div><button class="btn-save" onclick="submitGas()">Guardar gasto</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
   cit:'<div class="fg"><label class="fl">Fecha</label><input type="date" class="fi" id="d-fecha"></div><div class="fg"><label class="fl">Cliente</label><input list="cli-list" class="fi" id="d-cli" placeholder="Nombre del cliente"></div><div class="fr"><div class="fg"><label class="fl">Tipo</label><select class="fi" id="d-tipo"><option>Demo</option><option>Recurrente</option><option>Estratégica</option><option>Implementación</option><option>Auditoría</option><option>Otra</option></select></div><div class="fg"><label class="fl">Persona</label><select class="fi" id="d-pers"><option>Carla</option><option>Sheila</option><option>Matias</option><option>Juli</option><option>Otra</option></select></div></div><div class="fg"><label class="fl">Comentario (opcional)</label><input class="fi" id="d-com" placeholder="Estratégica, seguimiento..."></div><button class="btn-save" onclick="submitCit()">Guardar cita</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
   led:'<div class="fg"><label class="fl">Nombre del lead</label><input class="fi" id="d-nom" placeholder="Nombre y apellido"></div><div class="fr"><div class="fg"><label class="fl">Fuente</label><select class="fi" id="d-fuen"><option>Meta Ads</option><option>Referido</option><option>Web</option><option>Orgánico</option><option>Otro</option></select></div><div class="fg"><label class="fl">Asignado a</label><select class="fi" id="d-asig"><option>Carla</option><option>Sheila</option><option>Sin asignar</option></select></div></div><div class="fg"><label class="fl">Fase</label><select class="fi" id="d-fase"><option>Bienvenida</option><option>Agendó Demo</option><option>Mensaje de audio</option><option>Recibió presupuesto</option><option>Recibió llamada</option><option>Video de reseña</option><option>Cliente</option><option>Cliente perdido</option></select></div><div class="fg"><label class="fl">Valor estimado (€)</label><input type="number" class="fi" id="d-val" placeholder="0" step="1"></div><button class="btn-save" onclick="submitLed()">Guardar lead</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
-  cli:'<div class="fg"><label class="fl">Nombre del cliente</label><input class="fi" id="d-nom" placeholder="Nombre de la empresa"></div><div class="fr"><div class="fg"><label class="fl">Plan</label><select class="fi" id="d-plan"><option>Infinity Expande</option><option>CRM LTN</option><option>CRM gratuito</option><option>Inactivo</option></select></div><div class="fg"><label class="fl">Estado</label><select class="fi" id="d-est"><option>Activo</option><option>Inactivo</option><option>Gratuito</option></select></div></div><div class="fg"><label class="fl">Fecha de alta</label><input type="date" class="fi" id="d-fecha"></div><button class="btn-save" onclick="submitCli()">Guardar cliente</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>'
+  cli:'<div class="fg"><label class="fl">Nombre del cliente</label><input class="fi" id="d-nom" placeholder="Nombre de la empresa"></div><div class="fr"><div class="fg"><label class="fl">Plan</label><select class="fi" id="d-plan"><option>Infinity Expande</option><option>CRM LTN</option><option>CRM gratuito</option><option>Inactivo</option></select></div><div class="fg"><label class="fl">Estado</label><select class="fi" id="d-est"><option>Activo</option><option>Inactivo</option><option>Gratuito</option></select></div></div><div class="fg"><label class="fl">Fecha de alta</label><input type="date" class="fi" id="d-fecha"></div><button class="btn-save" onclick="submitCli()">Guardar cliente</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>',
+  str:'<div class="fr"><div class="fg"><label class="fl">Año</label><select class="fi" id="d-año"><option>2024</option><option selected>2025</option><option>2026</option><option>2027</option></select></div><div class="fg"><label class="fl">Mes</label><select class="fi" id="d-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div></div><div class="fg"><label class="fl">Cliente</label><input list="cli-list" class="fi" id="d-cli" placeholder="Nombre del cliente"></div><div class="fg"><label class="fl">Concepto</label><input class="fi" id="d-item" placeholder="Ej: Pago mensual febrero"></div><div class="fr"><div class="fg"><label class="fl">Importe (€)</label><input type="number" class="fi" id="d-imp" placeholder="0.00" step="0.01"></div><div class="fg"><label class="fl">Medio de pago</label><select class="fi" id="d-medio"><option>Wise</option><option>Transferencia</option><option>Efectivo</option><option>Bizum</option><option>Otro</option></select></div></div><button class="btn-save" onclick="submitStr()">Guardar pago</button><button class="btn-cancel" onclick="closeDrawer()">Cancelar</button>'
 };
 
-var TITLES={fac:'Nueva Facturación',gas:'Nuevo Gasto',cit:'Nueva Cita',led:'Nuevo Lead',cli:'Nuevo Cliente'};
+var TITLES={fac:'Nueva Facturación',gas:'Nuevo Gasto',cit:'Nueva Cita',led:'Nuevo Lead',cli:'Nuevo Cliente',str:'Nuevo Pago Manual'};
 
 function openDrawer(){
   var sec=CUR_SEC;
@@ -706,6 +707,24 @@ function bTar(){
   }
 }
 
+function submitStr(){
+  var entry={
+    año:+gv('d-año'),
+    mes:+gv('d-mes'),
+    cliente:gv('d-cli'),
+    item:gv('d-item'),
+    importe:parseFloat(gv('d-imp'))||0,
+    moneda:'EUR',
+    medio:gv('d-medio'),
+    fecha:new Date().toISOString().slice(0,10),
+    fuente:'Manual',
+    stripe_id:'manual_'+Date.now()
+  };
+  if(!entry.cliente||!entry.importe){alert('Cliente e importe son obligatorios');return;}
+  NEW_FAC.push(entry);saveNewEntries();closeDrawer();bStr();bRes();
+  setSync('spin','Guardando...');setTimeout(function(){setSync('ok','Guardado');},1200);
+}
+
 /* ── STRIPE ── */
 function bStr(){
   // Pagos de Stripe vienen en NEW_FAC con fuente='Stripe'
@@ -744,7 +763,7 @@ function bStr(){
         +'<td style="color:var(--tm)">'+( e.item||'—')+'</td>'
         +'<td class="mn tgn">'+fe(e.importe)+'</td>'
         +'<td><span class="bdg bpu">'+(e.moneda||'EUR')+'</span></td>'
-        +'<td><span class="bdg" style="background:rgba(103,114,229,.15);color:#a5b4fc">Stripe</span></td>'
+        +'<td><span class="bdg" style="background:'+(e.fuente==="Manual"?'rgba(245,158,11,.15);color:#f59e0b':'rgba(103,114,229,.15);color:#a5b4fc')+'">'+( e.fuente==="Manual"?(e.medio||'Manual'):'Stripe')+'</span></td>'
         +'</tr>';
     }).join('');
   }

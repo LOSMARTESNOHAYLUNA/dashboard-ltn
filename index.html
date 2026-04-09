@@ -137,6 +137,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
   <div class="nav-a" onclick="lS('cli',this)"><span>🏢</span><span>Clientes</span></div>
   <div class="nav-a" onclick="lS('tar',this)"><span>✅</span><span>Tareas</span></div>
   <div class="nav-a" onclick="lS('str',this)"><span>💳</span><span>Stripe</span></div>
+  <div class="nav-a" onclick="lS('ban',this)"><span>🏦</span><span>Banco</span></div>
 </aside>
 <div class="main">
   <div class="topbar">
@@ -222,6 +223,67 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
         <div class="card"><div class="ctitle">Por Plan</div><div class="cwt"><canvas id="c-cli-pl"></canvas></div></div>
       </div>
     </div>
+
+    <!-- BANCO -->
+    <div class="sec" id="s-ban">
+      <div class="g4" id="k-ban"></div>
+      <div class="card" id="ban-upload-zone" style="border:2px dashed rgba(230,25,120,.25);cursor:pointer;text-align:center;padding:28px;transition:all .2s"
+        ondragover="event.preventDefault();this.style.borderColor='#e61978'"
+        ondragleave="this.style.borderColor='rgba(230,25,120,.25)'"
+        ondrop="banDrop(event)">
+        <div style="font-size:28px;margin-bottom:8px">📂</div>
+        <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Arrastrá el CSV de Relay aquí</div>
+        <div style="font-size:11.5px;color:var(--tm);margin-bottom:14px">O hacé click para seleccionar el archivo</div>
+        <button class="btn-save" style="width:auto;padding:9px 20px;font-size:12px" onclick="document.getElementById('ban-file-input').click()">Seleccionar CSV</button>
+        <input type="file" id="ban-file-input" accept=".csv" style="display:none" onchange="banFileSelected(this)">
+      </div>
+      <div class="card" id="ban-filters" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <select class="fi" id="ban-fil-año" onchange="bBan()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+            <option value="">Todos los años</option>
+            <option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option>
+          </select>
+          <select class="fi" id="ban-fil-mes" onchange="bBan()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+            <option value="">Todos los meses</option>
+            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <select class="fi" id="ban-fil-cat" onchange="bBan()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+            <option value="">Todas las categorías</option>
+            <option>Ingresos de clientes</option><option>Proveedores y nóminas</option>
+            <option>Estructura</option><option>Aplicaciones y suscripciones</option>
+            <option>Publicidad y marketing</option><option>Impuestos y gestoría</option>
+            <option>Transferencias internas</option><option>Otros</option><option>Sin categoría</option>
+          </select>
+          <select class="fi" id="ban-fil-dir" onchange="bBan()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+            <option value="">Entradas y salidas</option>
+            <option value="credit">Solo entradas (+)</option>
+            <option value="debit">Solo salidas (−)</option>
+          </select>
+          <button onclick="banGuardar()" class="btn-save" style="width:auto;padding:7px 14px;font-size:11.5px">💾 Guardar en Firebase</button>
+          <button onclick="banLimpiar()" style="background:none;border:1px solid var(--bd);color:var(--tm);padding:7px 14px;border-radius:8px;font-size:11.5px;cursor:pointer">Limpiar</button>
+        </div>
+      </div>
+      <div class="g2" id="ban-charts" style="display:none">
+        <div class="card"><div class="ctitle">Entradas vs Salidas por Mes</div><div class="cwt"><canvas id="c-ban-mo"></canvas></div></div>
+        <div class="card"><div class="ctitle">Distribución por Categoría (Salidas)</div><div class="cwt"><canvas id="c-ban-cat"></canvas></div></div>
+      </div>
+      <div class="card" id="ban-table-card" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div class="ctitle" style="margin-bottom:0">Movimientos</div>
+          <div id="ban-total-line" style="font-size:11.5px"></div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Fecha</th><th>Descripción / Beneficiario</th><th>Importe</th><th>Categoría</th><th>Cuenta</th></tr></thead>
+            <tbody id="t-ban"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- TAREAS -->
     <div class="sec" id="s-tar">
       <div class="g4" id="k-tar"></div>
@@ -243,8 +305,41 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
         <div class="card"><div class="ctitle">Pagos por Mes</div><div class="cwt"><canvas id="c-str-mo"></canvas></div></div>
         <div class="card"><div class="ctitle">Por Cliente — Top 8</div><div class="cwt"><canvas id="c-str-cl"></canvas></div></div>
       </div>
-      <div class="card"><div class="ctitle">Listado de Pagos Recibidos</div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div class="ctitle" style="margin-bottom:0">Listado de Pagos Recibidos</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select class="fi" id="str-fil-año" onchange="bStr()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+              <option value="">Todos los años</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+            <select class="fi" id="str-fil-mes" onchange="bStr()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+              <option value="">Todos los meses</option>
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+            <select class="fi" id="str-fil-ori" onchange="bStr()" style="padding:6px 10px;font-size:11.5px;width:auto;border-radius:7px">
+              <option value="">Todos los orígenes</option>
+              <option value="Stripe">Stripe</option>
+              <option value="Manual">Manual (Wise/Transfer.)</option>
+            </select>
+          </div>
+        </div>
         <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Fecha</th><th>Cliente</th><th>Concepto</th><th>Importe</th><th>Moneda</th><th>Origen</th></tr></thead><tbody id="t-str"></tbody></table></div>
+        <div id="str-total" style="display:flex;justify-content:flex-end;padding:10px 9px 0;font-size:12px;color:var(--tm);border-top:1px solid var(--bd);margin-top:8px"></div>
       </div>
     </div>
   </div>
@@ -390,7 +485,8 @@ function initData(){
   setSync('spin','Sincronizando...');
   Promise.all([
     fbRead('dashboard-ltn','new_entries').catch(function(){return null;}),
-    fbRead('timetracker','ltn').catch(function(){return null;})
+    fbRead('timetracker','ltn').catch(function(){return null;}),
+    fbRead('dashboard-ltn','bank_data').catch(function(){return null;})
   ]).then(function(res){
     var updated=false;
     if(res[0]&&res[0].fields){
@@ -405,6 +501,10 @@ function initData(){
         updated=true;
       }catch(e){}
     }
+    if(res[0]&&res[0].fields&&res[0].fields.bank_movements){
+      try{BAN_DATA=JSON.parse(res[0].fields.bank_movements.stringValue);lsSet('bank_movements',BAN_DATA);}catch(e){}
+    }
+    if(fbBank&&fbBank.fields&&fbBank.fields.bank_movements){try{var bm=JSON.parse(fbBank.fields.bank_movements.stringValue);if(bm.length>0){BAN_DATA=bm;lsSet('bank_movements',bm);}}catch(e){}}
     if(res[1]&&res[1].fields&&res[1].fields.entries){
       try{TT_ENTRIES=JSON.parse(res[1].fields.entries.stringValue);lsSet('tt',TT_ENTRIES);updated=true;}catch(e){}
     }
@@ -432,9 +532,9 @@ function lS(id,el){
   document.querySelectorAll('.nav-a').forEach(function(a){a.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
   CUR_SEC=id;
-  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea',str:'pago manual'};
+  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea',str:'pago manual',ban:'—'};
   document.getElementById('addLabel').textContent=labels[id]||'entrada';
-  document.getElementById('addBtn').style.display=id==='tar'||id==='res'?'none':'flex';
+  document.getElementById('addBtn').style.display=id==='tar'||id==='res'||id==='ban'?'none':'flex';
   setTimeout(function(){if(id==='res')bRes();else if(id==='fac')bFac();else if(id==='gas')bGas();else if(id==='cit')bCit();else if(id==='led')bLed();else if(id==='cli')bCli();else bTar();},40);
 }
 function bAll(){bRes();bFac();bGas();bCit();bLed();bCli();bTar();bStr();}
@@ -727,8 +827,7 @@ function submitStr(){
 
 /* ── STRIPE ── */
 function bStr(){
-  // Pagos de Stripe vienen en NEW_FAC con fuente='Stripe'
-  var all=NEW_FAC.filter(function(e){return e.fuente==='Stripe';});
+  var all=NEW_FAC.filter(function(e){return e.fuente==='Stripe'||e.fuente==='Manual';});
   var allY=all.filter(function(e){return +e.año===YEAR;});
   var total=S(allY.map(function(e){return e.importe||0;}));
   var count=allY.length;
@@ -736,37 +835,296 @@ function bStr(){
   var topCli=sortDesc(groupSum(allY,'cliente','importe'));
 
   document.getElementById('k-str').innerHTML=kpi([
-    {l:'Total Recibido',v:fe(total),s:'Año '+YEAR+' vía Stripe',c1:'#6772e5',c2:MG},
+    {l:'Total Recibido',v:fe(total),s:'Año '+YEAR,c1:'#6772e5',c2:MG},
     {l:'Nº de Pagos',v:count,s:'Transacciones del período',c1:MG,c2:'#6772e5'},
     {l:'Ticket Medio',v:fe(avg),s:'Por transacción',c1:GN,c2:'#6772e5'},
     {l:'Histórico',v:all.length,s:'Total transacciones',c1:AM,c2:MG}
   ]);
 
-  // Gráfico por mes
   var mes=[0,0,0,0,0,0,0,0,0,0,0,0];
   allY.forEach(function(e){if(e.mes>=1&&e.mes<=12)mes[e.mes-1]+=e.importe||0;});
   mk('c-str-mo',{type:'bar',data:{labels:MESES,datasets:[{label:'€ recibido',data:mes,backgroundColor:'rgba(103,114,229,.7)',borderColor:'#6772e5',borderWidth:1.5,borderRadius:5}]},options:co({yf:function(v){return ff(v);}})});
 
-  // Gráfico por cliente
   var top8=topCli.slice(0,8);
   mk('c-str-cl',{type:'bar',data:{labels:top8.map(function(e){return e[0];}),datasets:[{label:'€',data:top8.map(function(e){return e[1];}),backgroundColor:top8.map(function(_,i){return 'hsla('+(240-i*15)+',60%,'+(55+i*4)+'%,.75)';}),borderRadius:5}]},options:co({ii:'y',xf:function(v){return ff(v);}})});
 
-  // Tabla
-  var sorted=all.slice().sort(function(a,b){return new Date(b.fecha||0)-new Date(a.fecha||0);});
+  var filAño=document.getElementById('str-fil-año')?document.getElementById('str-fil-año').value:'';
+  var filMes=document.getElementById('str-fil-mes')?document.getElementById('str-fil-mes').value:'';
+  var filOri=document.getElementById('str-fil-ori')?document.getElementById('str-fil-ori').value:'';
+
+  var filtrado=all.slice();
+  if(filAño)filtrado=filtrado.filter(function(e){return String(e.año)===filAño;});
+  if(filMes)filtrado=filtrado.filter(function(e){return String(e.mes)===filMes;});
+  if(filOri==='Manual')filtrado=filtrado.filter(function(e){return e.fuente==='Manual';});
+  else if(filOri==='Stripe')filtrado=filtrado.filter(function(e){return e.fuente==='Stripe';});
+
+  var sorted=filtrado.slice().sort(function(a,b){return new Date(b.fecha||0)-new Date(a.fecha||0);});
+  var totalFil=S(filtrado.map(function(e){return e.importe||0;}));
+
   if(sorted.length===0){
-    document.getElementById('t-str').innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--tf)">Todavía no hay pagos registrados desde Stripe. Llegarán automáticamente con el próximo pago.</td></tr>';
+    document.getElementById('t-str').innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--tf)">'+(all.length===0?'Sin pagos registrados. Ejecuta la importación de Stripe o añade un pago manual.':'Sin resultados con los filtros seleccionados.')+'</td></tr>';
   } else {
     document.getElementById('t-str').innerHTML=sorted.map(function(e){
       return '<tr>'
         +'<td>'+( e.fecha||'—')+'</td>'
         +'<td>'+e.cliente+'</td>'
-        +'<td style="color:var(--tm)">'+( e.item||'—')+'</td>'
+        +'<td style="color:var(--tm);font-size:11px">'+(e.item||'—')+'</td>'
         +'<td class="mn tgn">'+fe(e.importe)+'</td>'
         +'<td><span class="bdg bpu">'+(e.moneda||'EUR')+'</span></td>'
-        +'<td><span class="bdg" style="background:'+(e.fuente==="Manual"?'rgba(245,158,11,.15);color:#f59e0b':'rgba(103,114,229,.15);color:#a5b4fc')+'">'+( e.fuente==="Manual"?(e.medio||'Manual'):'Stripe')+'</span></td>'
+        +'<td><span class="bdg" style="background:'+(e.fuente==='Manual'?'rgba(245,158,11,.15);color:#f59e0b':'rgba(103,114,229,.15);color:#a5b4fc')+'">'+(e.fuente==='Manual'?(e.medio||'Manual'):'Stripe')+'</span></td>'
         +'</tr>';
     }).join('');
   }
+
+  var filLabel=[];
+  if(filAño)filLabel.push(filAño);
+  if(filMes)filLabel.push(MESES_F[+filMes-1]);
+  if(filOri)filLabel.push(filOri);
+  var label=filLabel.length?filLabel.join(' · '):'Total general';
+  document.getElementById('str-total').innerHTML=
+    '<span style="color:var(--tf)">'+label+':</span>&nbsp;'
+    +'<span class="mn tgn">'+fe(totalFil)+'</span>'
+    +'&nbsp;<span style="color:var(--tf)">('+sorted.length+' pagos)</span>';
+}
+/* ── BANCO ── */
+var BAN_DATA = [];  // movimientos cargados del CSV
+var BAN_CATS = {}; // categorías guardadas por movimiento id
+
+var CAT_COLORS = {
+  'Ingresos de clientes':       '#22d3a5',
+  'Proveedores y nóminas':      '#3c2b86',
+  'Estructura':                 '#e61978',
+  'Aplicaciones y suscripciones':'#f59e0b',
+  'Publicidad y marketing':     '#9333ea',
+  'Impuestos y gestoría':       '#f05a7e',
+  'Transferencias internas':    '#8b80b8',
+  'Otros':                      '#4e4770',
+  'Sin categoría':              '#2a2650'
+};
+
+var CATS = Object.keys(CAT_COLORS);
+
+// Auto-categorización por palabras clave
+var AUTO_RULES = [
+  {cat:'Ingresos de clientes',    keys:['aflamas','maraver','recoambiente','miró','catedral','academia','medea','farmacia','beatriz','federóp','kawi','holidayfor','avecan','cefiba','noemi','nacho','lidia','radu','experto','cuberos','volver']},
+  {cat:'Proveedores y nóminas',   keys:['nómina','salary','payroll','freelance','contratista','honorarios','autónomo']},
+  {cat:'Aplicaciones y suscripciones', keys:['slack','notion','google','adobe','zapier','make','ghl','highlevel','openai','anthropic','github','vercel','netlify','spotify','zoom','microsoft','apple','dropbox','hubspot','mailchimp','stripe','wazzap','twilio']},
+  {cat:'Publicidad y marketing',  keys:['meta','facebook','instagram','google ads','tiktok','linkedin ads','twitter','campaña','publicidad','ads']},
+  {cat:'Impuestos y gestoría',    keys:['hacienda','agencia tributaria','irpf','iva','seguridad social','gestor','asesor','notario','impuesto','tax']},
+  {cat:'Transferencias internas', keys:['transfer','transferencia interna','entre cuentas','savings','relay']},
+  {cat:'Estructura',              keys:['alquiler','renta','suministro','luz','agua','gas','internet','telefono','móvil','oficina','coworking','seguro']}
+];
+
+function autoCategoria(desc, payee) {
+  var texto = ((desc||'')+(payee||'')).toLowerCase();
+  for(var i=0;i<AUTO_RULES.length;i++){
+    var rule=AUTO_RULES[i];
+    for(var j=0;j<rule.keys.length;j++){
+      if(texto.indexOf(rule.keys[j])>=0) return rule.cat;
+    }
+  }
+  return 'Sin categoría';
+}
+
+function banMvId(mv) {
+  return (mv.fecha||'')+'_'+(mv.payee||mv.desc||'')+'_'+(mv.importe||0);
+}
+
+function parseRelayCSV(text) {
+  var lines = text.trim().split(/
+?
+/);
+  if(lines.length < 2) return [];
+  var headers = lines[0].split(',').map(function(h){return h.trim().replace(/"/g,'').toLowerCase();});
+  var movs = [];
+  for(var i=1;i<lines.length;i++){
+    var cols = lines[i].match(/(".*?"|[^,]+)(?=,|$)/g) || lines[i].split(',');
+    cols = cols.map(function(c){return c.trim().replace(/^"|"$/g,'');});
+    var row = {};
+    headers.forEach(function(h,idx){row[h]=cols[idx]||'';});
+
+    // Mapear columnas Relay
+    var fecha  = row['date']||row['fecha']||row['created at']||'';
+    var tipo   = (row['type']||row['tipo']||'').toLowerCase();
+    var dir    = (row['direction']||row['type']||'').toLowerCase();
+    var amt    = parseFloat((row['amount']||row['importe']||'0').replace(/[^0-9.-]/g,''))||0;
+    var payee  = row['payee']||row['beneficiary']||row['destinatario']||'';
+    var desc   = row['description']||row['memo']||row['descripción']||payee||'';
+    var cuenta = row['account']||row['account name']||'';
+
+    if(!fecha || isNaN(amt) || amt===0) continue;
+
+    // Determinar si es entrada o salida
+    var esEntrada = dir.indexOf('credit')>=0 || dir.indexOf('receive')>=0 || (amt>0 && dir.indexOf('debit')<0);
+    if(dir.indexOf('debit')>=0 || dir.indexOf('send')>=0 || dir.indexOf('payment')>=0) esEntrada=false;
+
+    var d = new Date(fecha);
+    movs.push({
+      fecha:    d.toISOString().slice(0,10),
+      mes:      isNaN(d.getMonth())?0:d.getMonth()+1,
+      año:      isNaN(d.getFullYear())?2025:d.getFullYear(),
+      importe:  Math.abs(amt),
+      dir:      esEntrada?'credit':'debit',
+      payee:    payee,
+      desc:     desc,
+      cuenta:   cuenta,
+      cat:      autoCategoria(desc, payee)
+    });
+  }
+  return movs;
+}
+
+function banFileSelected(input) {
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var movs = parseRelayCSV(e.target.result);
+    if(movs.length===0){alert('No se encontraron movimientos en el CSV. Verificá que sea un export de Relay.');return;}
+    // Merge: añadir sin duplicar
+    var existingIds = new Set(BAN_DATA.map(banMvId));
+    var nuevos = movs.filter(function(m){return !existingIds.has(banMvId(m));});
+    BAN_DATA = BAN_DATA.concat(nuevos);
+    alert('✓ '+nuevos.length+' movimientos nuevos cargados ('+movs.length+' en el archivo).');
+    bBan();
+  };
+  reader.readAsText(file);
+}
+
+function banDrop(e) {
+  e.preventDefault();
+  document.getElementById('ban-upload-zone').style.borderColor='rgba(230,25,120,.25)';
+  var file = e.dataTransfer.files[0];
+  if(!file) return;
+  var fakeInput = {files:[file]};
+  banFileSelected(fakeInput);
+}
+
+function banLimpiar() {
+  if(!confirm('¿Limpiar todos los movimientos cargados?')) return;
+  BAN_DATA = [];
+  bBan();
+}
+
+async function banGuardar() {
+  if(BAN_DATA.length===0){alert('No hay movimientos para guardar.');return;}
+  setSync('spin','Guardando movimientos...');
+  try {
+    var fields = { bank_movements: { stringValue: JSON.stringify(BAN_DATA) } };
+    await fbPatch('dashboard-ltn','bank_data',fields);
+    lsSet('bank_movements', BAN_DATA);
+    setSync('ok','Guardado en Firebase');
+    alert('✓ '+BAN_DATA.length+' movimientos guardados en Firebase.');
+  } catch(e) {
+    setSync('err','Error al guardar');
+    alert('Error: '+e.message);
+  }
+}
+
+function banCambiarCat(id, nuevaCat) {
+  var mv = BAN_DATA.find(function(m){return (m.fecha+'_'+m.importe).replace(/[^a-z0-9]/gi,'_')===id;});
+  if(mv) mv.cat = nuevaCat;
+}
+
+function bBan() {
+  // Cargar desde Firebase/cache si BAN_DATA está vacío
+  if(BAN_DATA.length===0){
+    var cached = lsGet('bank_movements');
+    if(cached && cached.length>0) BAN_DATA = cached;
+  }
+
+  var tieneData = BAN_DATA.length > 0;
+  document.getElementById('ban-upload-zone').style.display = tieneData ? 'none' : 'block';
+  document.getElementById('ban-filters').style.display = tieneData ? 'block' : 'none';
+  document.getElementById('ban-charts').style.display = tieneData ? 'grid' : 'none';
+  document.getElementById('ban-table-card').style.display = tieneData ? 'block' : 'none';
+
+  if(!tieneData) {
+    document.getElementById('k-ban').innerHTML = kpi([
+      {l:'Movimientos',v:'0',s:'Sube un CSV de Relay',c1:'#3c2b86',c2:'#e61978'},
+      {l:'Entradas',v:'—',s:'',c1:'#22d3a5',c2:'#3c2b86'},
+      {l:'Salidas',v:'—',s:'',c1:'#f05a7e',c2:'#e61978'},
+      {l:'Neto',v:'—',s:'',c1:'#f59e0b',c2:'#e61978'}
+    ]);
+    return;
+  }
+
+  // Filtros
+  var filAño = document.getElementById('ban-fil-año')?document.getElementById('ban-fil-año').value:'';
+  var filMes = document.getElementById('ban-fil-mes')?document.getElementById('ban-fil-mes').value:'';
+  var filCat = document.getElementById('ban-fil-cat')?document.getElementById('ban-fil-cat').value:'';
+  var filDir = document.getElementById('ban-fil-dir')?document.getElementById('ban-fil-dir').value:'';
+
+  var filtered = BAN_DATA.slice();
+  if(filAño) filtered=filtered.filter(function(m){return String(m.año)===filAño;});
+  if(filMes) filtered=filtered.filter(function(m){return String(m.mes)===filMes;});
+  if(filCat) filtered=filtered.filter(function(m){return m.cat===filCat;});
+  if(filDir) filtered=filtered.filter(function(m){return m.dir===filDir;});
+
+  var entradas=filtered.filter(function(m){return m.dir==='credit';});
+  var salidas =filtered.filter(function(m){return m.dir==='debit';});
+  var totEnt  =S(entradas.map(function(m){return m.importe;}));
+  var totSal  =S(salidas.map(function(m){return m.importe;}));
+  var neto    =totEnt-totSal;
+
+  // KPIs
+  document.getElementById('k-ban').innerHTML=kpi([
+    {l:'Movimientos',v:filtered.length,s:'En el período seleccionado',c1:'#3c2b86',c2:'#e61978'},
+    {l:'Entradas',v:fe(totEnt),s:entradas.length+' transacciones',c1:'#22d3a5',c2:'#3c2b86',col:'#22d3a5'},
+    {l:'Salidas',v:fe(totSal),s:salidas.length+' transacciones',c1:'#f05a7e',c2:'#e61978',col:'#f05a7e'},
+    {l:'Neto',v:fe(neto),s:'Entradas menos salidas',c1:'#f59e0b',c2:'#3c2b86',col:neto>=0?'#22d3a5':'#f05a7e'}
+  ]);
+
+  // Gráfico mensual
+  var mesEnt=[0,0,0,0,0,0,0,0,0,0,0,0];
+  var mesSal=[0,0,0,0,0,0,0,0,0,0,0,0];
+  filtered.forEach(function(m){
+    if(m.mes>=1&&m.mes<=12){
+      if(m.dir==='credit') mesEnt[m.mes-1]+=m.importe;
+      else mesSal[m.mes-1]+=m.importe;
+    }
+  });
+  mk('c-ban-mo',{type:'bar',data:{labels:MESES,datasets:[
+    {label:'Entradas',data:mesEnt,backgroundColor:'rgba(34,211,165,.65)',borderRadius:4},
+    {label:'Salidas', data:mesSal,backgroundColor:'rgba(240,90,126,.55)',borderRadius:4}
+  ]},options:co({yf:function(v){return ff(v);}})});
+
+  // Gráfico categorías (solo salidas)
+  var catSums={};
+  salidas.forEach(function(m){catSums[m.cat]=(catSums[m.cat]||0)+m.importe;});
+  var catArr=sortDesc(catSums);
+  mk('c-ban-cat',{type:'doughnut',data:{
+    labels:catArr.map(function(e){return e[0];}),
+    datasets:[{data:catArr.map(function(e){return e[1];}),
+      backgroundColor:catArr.map(function(e){return CAT_COLORS[e[0]]||'#4e4770';}),
+      borderWidth:0,hoverOffset:5}]
+  },options:{cutout:'60%',maintainAspectRatio:false,responsive:true,plugins:{
+    legend:{position:'right',labels:{padding:10,boxWidth:9,font:{size:10}}},
+    tooltip:{backgroundColor:'rgba(10,8,28,.96)',callbacks:{label:function(c){return c.label+': '+fe(c.raw);}}}
+  }}});
+
+  // Total line
+  document.getElementById('ban-total-line').innerHTML=
+    '<span class="mn" style="color:#22d3a5">+'+fe(totEnt)+'</span>'
+    +'&nbsp;&nbsp;<span class="mn" style="color:#f05a7e">−'+fe(totSal)+'</span>'
+    +'&nbsp;&nbsp;<span class="mn" style="color:'+(neto>=0?'#22d3a5':'#f05a7e')+'">= '+fe(neto)+'</span>';
+
+  // Tabla
+  var sorted=filtered.slice().sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
+  document.getElementById('t-ban').innerHTML=sorted.map(function(m){
+    var id=(m.fecha+'_'+m.importe).replace(/[^a-z0-9]/gi,'_');
+    var esEnt=m.dir==='credit';
+    var catOpts=CATS.map(function(c){
+      return '<option value="'+c+'"'+(m.cat===c?' selected':'')+'>'+c+'</option>';
+    }).join('');
+    return '<tr>'
+      +'<td style="white-space:nowrap">'+m.fecha+'</td>'
+      +'<td style="font-size:11.5px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+m.desc+'">'+m.desc+'</td>'
+      +'<td class="mn '+(esEnt?'tgn':'trd')+'">'+(esEnt?'+':'-')+fe(m.importe)+'</td>'
+      +'<td><select class="fi" style="padding:3px 6px;font-size:10.5px;border-radius:5px;background:var(--s3);width:auto" onchange="banCambiarCat(''+id+'',this.value)">'+catOpts+'</select></td>'
+      +'<td style="font-size:10.5px;color:var(--tf)">'+m.cuenta+'</td>'
+      +'</tr>';
+  }).join('');
 }
 
 /* ── INIT ── */

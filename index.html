@@ -136,6 +136,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
   <div class="nav-a" onclick="lS('led',this)"><span>📢</span><span>Leads</span></div>
   <div class="nav-a" onclick="lS('cli',this)"><span>🏢</span><span>Clientes</span></div>
   <div class="nav-a" onclick="lS('tar',this)"><span>✅</span><span>Tareas</span></div>
+  <div class="nav-a" onclick="lS('str',this)"><span>💳</span><span>Stripe</span></div>
 </aside>
 <div class="main">
   <div class="topbar">
@@ -233,6 +234,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
         <div class="card"><div class="ctitle">Últimas Tareas (Time Tracker)</div>
           <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Tarea</th><th>Cliente</th><th>Resp.</th><th>Estado</th><th>h</th></tr></thead><tbody id="t-live"></tbody></table></div>
         </div>
+      </div>
+    </div>
+    <!-- STRIPE -->
+    <div class="sec" id="s-str">
+      <div class="g4" id="k-str"></div>
+      <div class="g2">
+        <div class="card"><div class="ctitle">Pagos por Mes</div><div class="cwt"><canvas id="c-str-mo"></canvas></div></div>
+        <div class="card"><div class="ctitle">Por Cliente — Top 8</div><div class="cwt"><canvas id="c-str-cl"></canvas></div></div>
+      </div>
+      <div class="card"><div class="ctitle">Listado de Pagos Recibidos</div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Fecha</th><th>Cliente</th><th>Concepto</th><th>Importe</th><th>Moneda</th><th>Origen</th></tr></thead><tbody id="t-str"></tbody></table></div>
       </div>
     </div>
   </div>
@@ -420,12 +432,12 @@ function lS(id,el){
   document.querySelectorAll('.nav-a').forEach(function(a){a.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
   CUR_SEC=id;
-  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea'};
+  var labels={res:'—',fac:'facturación',gas:'gasto',cit:'cita',led:'lead',cli:'cliente',tar:'tarea',str:'—'};
   document.getElementById('addLabel').textContent=labels[id]||'entrada';
-  document.getElementById('addBtn').style.display=id==='tar'||id==='res'?'none':'flex';
+  document.getElementById('addBtn').style.display=id==='tar'||id==='res'||id==='str'?'none':'flex';
   setTimeout(function(){if(id==='res')bRes();else if(id==='fac')bFac();else if(id==='gas')bGas();else if(id==='cit')bCit();else if(id==='led')bLed();else if(id==='cli')bCli();else bTar();},40);
 }
-function bAll(){bRes();bFac();bGas();bCit();bLed();bCli();bTar();}
+function bAll(){bRes();bFac();bGas();bCit();bLed();bCli();bTar();bStr();}
 
 /* ── DRAWER ── */
 var FORMS={
@@ -690,6 +702,50 @@ function bTar(){
     document.getElementById('t-live').innerHTML=hist.slice(0,10).map(function(t){
       var ec=t.estado==='Completada'?'bgn':t.estado==='En curso'?'bam':t.estado==='No iniciada'?'bpu':'brd';
       return '<tr><td style="font-size:10.5px">'+(t.tarea||'—').substring(0,35)+'</td><td>'+(t.cliente||'—').substring(0,15)+'</td><td>'+(t.responsable||'—')+'</td><td><span class="bdg '+ec+'">'+t.estado+'</span></td><td class="mn">—</td></tr>';
+    }).join('');
+  }
+}
+
+/* ── STRIPE ── */
+function bStr(){
+  // Pagos de Stripe vienen en NEW_FAC con fuente='Stripe'
+  var all=NEW_FAC.filter(function(e){return e.fuente==='Stripe';});
+  var allY=all.filter(function(e){return +e.año===YEAR;});
+  var total=S(allY.map(function(e){return e.importe||0;}));
+  var count=allY.length;
+  var avg=count>0?Math.round(total/count):0;
+  var topCli=sortDesc(groupSum(allY,'cliente','importe'));
+
+  document.getElementById('k-str').innerHTML=kpi([
+    {l:'Total Recibido',v:fe(total),s:'Año '+YEAR+' vía Stripe',c1:'#6772e5',c2:MG},
+    {l:'Nº de Pagos',v:count,s:'Transacciones del período',c1:MG,c2:'#6772e5'},
+    {l:'Ticket Medio',v:fe(avg),s:'Por transacción',c1:GN,c2:'#6772e5'},
+    {l:'Histórico',v:all.length,s:'Total transacciones',c1:AM,c2:MG}
+  ]);
+
+  // Gráfico por mes
+  var mes=[0,0,0,0,0,0,0,0,0,0,0,0];
+  allY.forEach(function(e){if(e.mes>=1&&e.mes<=12)mes[e.mes-1]+=e.importe||0;});
+  mk('c-str-mo',{type:'bar',data:{labels:MESES,datasets:[{label:'€ recibido',data:mes,backgroundColor:'rgba(103,114,229,.7)',borderColor:'#6772e5',borderWidth:1.5,borderRadius:5}]},options:co({yf:function(v){return ff(v);}})});
+
+  // Gráfico por cliente
+  var top8=topCli.slice(0,8);
+  mk('c-str-cl',{type:'bar',data:{labels:top8.map(function(e){return e[0];}),datasets:[{label:'€',data:top8.map(function(e){return e[1];}),backgroundColor:top8.map(function(_,i){return 'hsla('+(240-i*15)+',60%,'+(55+i*4)+'%,.75)';}),borderRadius:5}]},options:co({ii:'y',xf:function(v){return ff(v);}})});
+
+  // Tabla
+  var sorted=all.slice().sort(function(a,b){return new Date(b.fecha||0)-new Date(a.fecha||0);});
+  if(sorted.length===0){
+    document.getElementById('t-str').innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--tf)">Todavía no hay pagos registrados desde Stripe. Llegarán automáticamente con el próximo pago.</td></tr>';
+  } else {
+    document.getElementById('t-str').innerHTML=sorted.map(function(e){
+      return '<tr>'
+        +'<td>'+( e.fecha||'—')+'</td>'
+        +'<td>'+e.cliente+'</td>'
+        +'<td style="color:var(--tm)">'+( e.item||'—')+'</td>'
+        +'<td class="mn tgn">'+fe(e.importe)+'</td>'
+        +'<td><span class="bdg bpu">'+(e.moneda||'EUR')+'</span></td>'
+        +'<td><span class="bdg" style="background:rgba(103,114,229,.15);color:#a5b4fc">Stripe</span></td>'
+        +'</tr>';
     }).join('');
   }
 }

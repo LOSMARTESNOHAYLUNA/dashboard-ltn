@@ -1003,49 +1003,83 @@ function banMvId(mv) {
 }
 
 function parseRelayCSV(text) {
-  var lines = text.trim().split(/
-?
-/);
+  // Split por salto de línea sin usar regex
+  var lines = [];
+  var cur = '';
+  for(var ci=0; ci<text.length; ci++){
+    var ch = text.charAt(ci);
+    if(ch === '\r') continue;
+    if(ch === '\n'){ lines.push(cur); cur=''; }
+    else cur += ch;
+  }
+  if(cur.length>0) lines.push(cur);
+
   if(lines.length < 2) return [];
-  var headers = lines[0].split(',').map(function(h){return h.trim().replace(/"/g,'').toLowerCase();});
+
+  // Parsear cabeceras — quitar comillas
+  var headers = lines[0].split(',').map(function(h){
+    var t=h.trim();
+    if(t.charAt(0)==='"') t=t.slice(1);
+    if(t.charAt(t.length-1)==='"') t=t.slice(0,-1);
+    return t.toLowerCase();
+  });
+
   var movs = [];
-  for(var i=1;i<lines.length;i++){
-    var cols = lines[i].match(/(".*?"|[^,]+)(?=,|$)/g) || lines[i].split(',');
-    cols = cols.map(function(c){return c.trim().replace(/^"|"$/g,'');});
+  for(var i=1; i<lines.length; i++){
+    var line = lines[i];
+    if(!line.trim()) continue;
+
+    // Parsear campos respetando comillas
+    var cols = [];
+    var field = '';
+    var inQ = false;
+    for(var k=0; k<line.length; k++){
+      var c = line.charAt(k);
+      if(c==='"'){ inQ=!inQ; continue; }
+      if(c===',' && !inQ){ cols.push(field.trim()); field=''; continue; }
+      field += c;
+    }
+    cols.push(field.trim());
+
     var row = {};
-    headers.forEach(function(h,idx){row[h]=cols[idx]||'';});
+    for(var h=0; h<headers.length; h++) row[headers[h]] = cols[h]||'';
 
-    // Mapear columnas Relay
     var fecha  = row['date']||row['fecha']||row['created at']||'';
-    var tipo   = (row['type']||row['tipo']||'').toLowerCase();
     var dir    = (row['direction']||row['type']||'').toLowerCase();
-    var amt    = parseFloat((row['amount']||row['importe']||'0').replace(/[^0-9.-]/g,''))||0;
-    var payee  = row['payee']||row['beneficiary']||row['destinatario']||'';
-    var desc   = row['description']||row['memo']||row['descripción']||payee||'';
-    var cuenta = row['account']||row['account name']||'';
+    var amtStr = row['amount']||row['importe']||'0';
+    // Limpiar importe sin regex
+    var amtClean = '';
+    for(var ac=0; ac<amtStr.length; ac++){
+      var cc=amtStr.charCodeAt(ac);
+      if((cc>=48&&cc<=57)||cc===46||cc===45) amtClean+=amtStr.charAt(ac);
+    }
+    var amt = parseFloat(amtClean)||0;
+    var payee = row['payee']||row['beneficiary']||row['destinatario']||'';
+    var desc  = row['description']||row['memo']||row['descripcion']||payee||'';
+    var cuenta= row['account']||row['account name']||'';
 
-    if(!fecha || isNaN(amt) || amt===0) continue;
+    if(!fecha || amt===0) continue;
 
-    // Determinar si es entrada o salida
-    var esEntrada = dir.indexOf('credit')>=0 || dir.indexOf('receive')>=0 || (amt>0 && dir.indexOf('debit')<0);
+    var esEntrada = dir.indexOf('credit')>=0 || dir.indexOf('receive')>=0;
     if(dir.indexOf('debit')>=0 || dir.indexOf('send')>=0 || dir.indexOf('payment')>=0) esEntrada=false;
+    if(amt<0){ esEntrada=false; amt=Math.abs(amt); }
 
     var d = new Date(fecha);
+    if(isNaN(d.getTime())) continue;
     movs.push({
-      fecha:    d.toISOString().slice(0,10),
-      mes:      isNaN(d.getMonth())?0:d.getMonth()+1,
-      año:      isNaN(d.getFullYear())?2025:d.getFullYear(),
-      importe:  Math.abs(amt),
-      dir:      esEntrada?'credit':'debit',
-      payee:    payee,
-      desc:     desc,
-      cuenta:   cuenta,
-      cat:      autoCategoria(desc, payee)
+      fecha:  d.toISOString().slice(0,10),
+      mes:    d.getMonth()+1,
+      año:    d.getFullYear(),
+      importe:Math.abs(amt),
+      dir:    esEntrada?'credit':'debit',
+      payee:  payee,
+      desc:   desc||payee,
+      cuenta: cuenta,
+      cat:    autoCategoria(desc, payee)
     });
   }
   return movs;
 }
-
 function banFileSelected(input) {
   var file = input.files[0];
   if(!file) return;
@@ -1093,8 +1127,13 @@ async function banGuardar() {
   }
 }
 
+function banCambiarCatEl(sel) {
+  var id = sel.getAttribute('data-bid');
+  var nuevaCat = sel.value;
+  banCambiarCat(id, nuevaCat);
+}
 function banCambiarCat(id, nuevaCat) {
-  var mv = BAN_DATA.find(function(m){return (m.fecha+'_'+m.importe).replace(/[^a-z0-9]/gi,'_')===id;});
+  var mv = BAN_DATA.find(function(m){return sanitizeId(m.fecha+'_'+m.importe)===id;});
   if(mv) mv.cat = nuevaCat;
 }
 
@@ -1184,7 +1223,7 @@ function bBan() {
   // Tabla
   var sorted=filtered.slice().sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
   document.getElementById('t-ban').innerHTML=sorted.map(function(m){
-    var id=(m.fecha+'_'+m.importe).replace(/[^a-z0-9]/gi,'_');
+    var id=sanitizeId(m.fecha+'_'+m.importe);
     var esEnt=m.dir==='credit';
     var catOpts=CATS.map(function(c){
       return '<option value="'+c+'"'+(m.cat===c?' selected':'')+'>'+c+'</option>';
@@ -1193,7 +1232,7 @@ function bBan() {
       +'<td style="white-space:nowrap">'+m.fecha+'</td>'
       +'<td style="font-size:11.5px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+m.desc+'">'+m.desc+'</td>'
       +'<td class="mn '+(esEnt?'tgn':'trd')+'">'+(esEnt?'+':'-')+fe(m.importe)+'</td>'
-      +'<td><select class="fi" style="padding:3px 6px;font-size:10.5px;border-radius:5px;background:var(--s3);width:auto" onchange="banCambiarCat(''+id+'',this.value)">'+catOpts+'</select></td>'
+      +'<td><select class="fi" style="padding:3px 6px;font-size:10.5px;border-radius:5px;background:var(--s3);width:auto" data-bid="'+id+'" onchange="banCambiarCatEl(this)">'+catOpts+'</select></td>'
       +'<td style="font-size:10.5px;color:var(--tf)">'+m.cuenta+'</td>'
       +'</tr>';
   }).join('');
@@ -1237,7 +1276,7 @@ function editFac(idx) {
     +'<td><input class="edit-input" list="cli-list" id="ef-cli-'+idx+'" value="'+entry.cliente+'"></td>'
     +'<td><input class="edit-input" id="ef-item-'+idx+'" value="'+entry.item+'"></td>'
     +'<td><input class="edit-input" style="width:80px" type="number" id="ef-imp-'+idx+'" value="'+entry.importe+'"></td>'
-    +'<td colspan="1"><div class="row-actions"><button class="btn-save-row" onclick="saveFac('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit('fac')">✗</button></div></td>';
+    +'<td colspan="1"><div class="row-actions"><button class="btn-save-row" onclick="saveFac('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit("fac")">✗</button></div></td>';
 }
 function saveFac(idx, realIdx) {
   var v = {
@@ -1275,7 +1314,7 @@ function editGas(idx) {
     '<td><input class="edit-input" style="width:90px" id="eg-fecha-'+idx+'" value="'+(MESES[entry.mes-1]||'')+'"></td>'
     +'<td><select class="edit-select" id="eg-cat-'+idx+'">'+catOpts+'</select></td>'
     +'<td><input class="edit-input" type="number" style="width:90px" id="eg-imp-'+idx+'" value="'+entry.importe+'"></td>'
-    +'<td colspan="1"><div class="row-actions"><button class="btn-save-row" onclick="saveGas('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit('gas')">✗</button></div></td>';
+    +'<td colspan="1"><div class="row-actions"><button class="btn-save-row" onclick="saveGas('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit("gas")">✗</button></div></td>';
 }
 function saveGas(idx, realIdx) {
   NEW_GAS[realIdx].concepto = document.getElementById('eg-cat-'+idx).value;
@@ -1311,7 +1350,7 @@ function editCit(idx) {
     +'<td><input class="edit-input" list="cli-list" id="ec-cli-'+idx+'" value="'+entry.cliente+'"></td>'
     +'<td><select class="edit-select" id="ec-tipo-'+idx+'">'+tipoOpts+'</select></td>'
     +'<td><select class="edit-select" id="ec-pers-'+idx+'">'+persOpts+'</select></td>'
-    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveCit('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit('cit')">✗</button></div></td>';
+    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveCit('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit("cit")">✗</button></div></td>';
 }
 function saveCit(idx, realIdx) {
   var fecha = document.getElementById('ec-fecha-'+idx).value;
@@ -1350,7 +1389,7 @@ function editLed(idx) {
     +'<td><select class="edit-select" id="el-fase-'+idx+'">'+faseOpts+'</select></td>'
     +'<td><input class="edit-input" style="width:80px" id="el-fue-'+idx+'" value="'+entry.fuente+'"></td>'
     +'<td><input class="edit-input" style="width:80px" id="el-asig-'+idx+'" value="'+(entry.asignado||'')+'"></td>'
-    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveLed('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit('led')">✗</button></div></td>';
+    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveLed('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit("led")">✗</button></div></td>';
 }
 function saveLed(idx, realIdx) {
   var fecha = document.getElementById('el-fecha-'+idx).value;
@@ -1392,7 +1431,7 @@ function editCli(idx) {
     +'<td><select class="edit-select" id="ecl-plan-'+idx+'">'+planOpts+'</select></td>'
     +'<td><select class="edit-select" id="ecl-est-'+idx+'">'+estOpts+'</select></td>'
     +'<td><input class="edit-input" style="width:110px" type="date" id="ecl-fecha-'+idx+'" value="'+(entry.fecha_inicio||'')+'"></td>'
-    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveCli('+idx+','+realIdx+','+isNew+')">✓</button><button class="btn-del" onclick="cancelEdit('cli')">✗</button></div></td>';
+    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveCli('+idx+','+realIdx+','+isNew+')">✓</button><button class="btn-del" onclick="cancelEdit("cli")">✗</button></div></td>';
 }
 function saveCli(idx, realIdx, isNew) {
   var data = {
@@ -1426,7 +1465,7 @@ function editStr(idx) {
     +'<td><input class="edit-input" id="es-item-'+idx+'" value="'+entry.item+'"></td>'
     +'<td><input class="edit-input" style="width:80px" type="number" id="es-imp-'+idx+'" value="'+entry.importe+'"></td>'
     +'<td></td>'
-    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveStr('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit('str')">✗</button></div></td>';
+    +'<td><div class="row-actions"><button class="btn-save-row" onclick="saveStr('+idx+','+realIdx+')">✓</button><button class="btn-del" onclick="cancelEdit("str")">✗</button></div></td>';
 }
 function saveStr(idx, realIdx) {
   var fecha = document.getElementById('es-fecha-'+idx).value;
@@ -1455,6 +1494,17 @@ function cancelEdit(sec) {
   else if(sec==='led') bLed();
   else if(sec==='cli') bCli();
   else if(sec==='str') bStr();
+}
+
+function sanitizeId(s){
+  var r='';
+  var str=String(s);
+  for(var i=0;i<str.length;i++){
+    var code=str.charCodeAt(i);
+    if((code>=48&&code<=57)||(code>=65&&code<=90)||(code>=97&&code<=122)) r+=str[i];
+    else r+='_';
+  }
+  return r;
 }
 
 /* ── INIT ── */
